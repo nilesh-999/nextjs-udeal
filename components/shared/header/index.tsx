@@ -19,12 +19,13 @@ export default function Header() {
               className='flex items-center header-button font-extrabold text-2xl m-1 '
             >
               <Image
-                src='/icons/logo.svg'
-                width={40}
-                height={40}
+                src='/icons/logo.png'
+                width={60}
+                height={60}
                 alt={`${APP_NAME} logo`}
               />
-              {APP_NAME}
+              <img src='icons/logo1.png' width={108} height={40} alt={`${APP_NAME} logo`} />
+
             </Link>
           </div>
 

@@ -24,8 +24,12 @@ export default function Header() {
                 height={60}
                 alt={`${APP_NAME} logo`}
               />
-              <img src='icons/logo1.png' width={108} height={40} alt={`${APP_NAME} logo`} />
-
+              <Image
+                src='/icons/logo1.png'
+                width={108}
+                height={40}
+                alt={`${APP_NAME} logo`}
+              />
             </Link>
           </div>
 

@@ -30,6 +30,29 @@ const data = {
             href: '/page/help',
         },
     ],
+    carousels: [
+        {
+            title: 'Most Popular Drafter For Sale',
+            buttonCaption: 'Shop Now',
+            image: '/images/logo.png',
+            url: '/search?category=Drafter',
+            isPublished: true,
+        },
+        {
+            title: 'Best Seller in Sheet Holder',
+            buttonCaption: 'Shop Now',
+            image: '/images/logo.png',
+            url: '/search?category=Sheet Holder',
+            isPublished: true,
+        },
+        {
+            title: 'Best Seller in Other stuff',
+            buttonCaption: 'Shop Now',
+            image: '/images/logo.png',
+            url: '/search?category=Other Stuff',
+            isPublished: true,
+        },
+    ]
 }
 
 export default data

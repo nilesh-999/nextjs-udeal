@@ -70,7 +70,7 @@ const data : Data = {
         {
             title: 'Most Popular Drafter For Sale',
             buttonCaption: 'Shop Now',
-            image: '/images/logo.png',
+            image: '/images/logo1.png',
             url: '/search?category=Drafter',
             isPublished: true,
         },

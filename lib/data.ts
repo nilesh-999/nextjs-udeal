@@ -84,7 +84,7 @@ const data : Data = {
         {
             title: 'Best Seller in Other stuff',
             buttonCaption: 'Shop Now',
-            image: '/images/logo.png',
+            image: '/images/logo1.png',
             url: '/search?category=Other Stuff',
             isPublished: true,
         },

@@ -1,4 +1,40 @@
-const data = {
+import {Data, IProductInput } from '@/types'
+import { toSlug } from './utils'
+
+
+const products: IProductInput[] = [
+    {
+        name: 'Rolex Drafter',
+        slug: toSlug('Rolex Drafter'),
+        category: 'Drafter',
+        images: ['/images/logo.png'],
+        tags: ['new-arrival'],
+        isPublished: true,
+        price: 21.8,
+        listPrice: 0,
+        brand:'Rolex',
+        avgRating: 4.5,
+        numReviews: 7,
+        ratingDistribution: [
+            
+                {rating: 1,count: 0},
+                {rating: 2,count: 0},
+                {rating: 3,count: 0},
+                {rating: 4,count: 0},
+                {rating: 5,count: 0},
+        ],
+        numSales: 9,
+        countInStock: 11,
+        description: 'This is a Rolex Drafter',
+        sizes: ['S', 'M', 'L', 'XL'],
+        colors: ['red', 'blue', 'green'],
+        reviews: [],
+    },
+]
+
+
+const data : Data = {
+    products,
     headerMenus: [
         {
             name: "Today's Deal",
@@ -41,7 +77,7 @@ const data = {
         {
             title: 'Best Seller in Sheet Holder',
             buttonCaption: 'Shop Now',
-            image: '/images/logo.png',
+            image: '/images/logo.png',  
             url: '/search?category=Sheet Holder',
             isPublished: true,
         },

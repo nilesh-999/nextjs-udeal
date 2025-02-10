@@ -3,10 +3,10 @@ import { toSlug } from './utils'
 
 const products: IProductInput[] = [
   {
-    name: 'Rolex Drafter',
-    slug: toSlug('Rolex Drafter'),
-    category: 'Drafter',
-    images: ['/images/logo1.png'],
+    name: 'Rolex Holder',
+    slug: toSlug('Rolex Holder'),
+    category: 'Sheet Holder',
+    images: ['/images/logo.png'],
     tags: ['new-arrival'],
     isPublished: true,
     price: 21.8,
@@ -23,9 +23,9 @@ const products: IProductInput[] = [
     ],
     numSales: 9,
     countInStock: 11,
-    description: 'This is a Rolex Drafter',
+    description: 'This is a Rolex Sheet Holder',
     sizes: ['S', 'M', 'L', 'XL'],
-    colors: ['red', 'blue', 'green'],
+    colors: ['black'],
     reviews: [],
   },
 ]

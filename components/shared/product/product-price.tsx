@@ -25,7 +25,7 @@ const ProductPrice = ({
 
   ): listPrice == 0? (
     <div className={cn('text-3xl', className)}>
-        <span className='text-xs align-super'>$</span>
+        <span className='text-xs align-super'>{'\u20B9'}</span>
         {intValue}
         <span className='text-xs align-super'>{floatValue}</span>
 

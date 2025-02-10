@@ -28,6 +28,33 @@ const products: IProductInput[] = [
     colors: ['black'],
     reviews: [],
   },
+
+  {
+    name: 'Omega Drafter',
+    slug: toSlug('Omega Holder'),
+    category: 'Drafter',
+    images: ['/images/logo1.png'],
+    tags: ['new-arrival'],
+    isPublished: true,
+    price: 21.8,
+    listPrice: 0,
+    brand: 'Omega',
+    avgRating: 4.5,
+    numReviews: 7,
+    ratingDistribution: [
+      { rating: 1, count: 0 },
+      { rating: 2, count: 0 },
+      { rating: 3, count: 0 },
+      { rating: 4, count: 0 },
+      { rating: 5, count: 0 },
+    ],
+    numSales: 9,
+    countInStock: 11,
+    description: 'This is a Omega Drafter',
+    sizes: ['S', 'M', 'L', 'XL'],
+    colors: ['black'],
+    reviews: [],
+  },
 ]
 
 const data: Data = {

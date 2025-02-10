@@ -7,7 +7,7 @@ const products: IProductInput[] = [
     slug: toSlug('Rolex Holder'),
     category: 'Sheet Holder',
     images: ['/images/logo.png'],
-    tags: ['new-arrival'],
+    tags: ['todays-deal'],
     isPublished: true,
     price: 21.8,
     listPrice: 0,

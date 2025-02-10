@@ -16,4 +16,20 @@ export const toSlug =(text: string): string =>
     .replace(/[^\w\s-]+/g, '')
     .replace(/\s+/g, '-')
     .replace(/^-+|-+$/g, '')
+
+const CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
+  currency: 'INR',
+  style: 'currency',
+  minimumFractionDigits: 2,
+})  
+
+export function formatCurrency(value: number) {
+  return CURRENCY_FORMATTER.format(value)
+}
+
+const NUMBER_FORMATTER = new Intl.NumberFormat('en-US')
+  
+export function formatNumber(number: number) {
+  return NUMBER_FORMATTER.format(number)
+}
     

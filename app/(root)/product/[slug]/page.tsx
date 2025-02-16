@@ -124,7 +124,7 @@ export default async function ProductDetails(props: {
       </section>
       <section className='mt-10'>
         <ProductSlider products={relatedProducts.data}
-        title={'Best Sellers in ${product.category}'} 
+        title={`Best Sellers in ${product.category}`} 
         />
       </section>
     </div>

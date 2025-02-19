@@ -12,5 +12,6 @@ export default async function HomeLayout({
             <main className='flex-l flex flex-col'>{children}</main>
             <Footer />
         </div>
+        
     )
 }

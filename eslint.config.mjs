@@ -14,3 +14,15 @@ const eslintConfig = [
 ];
 
 export default eslintConfig;
+
+module.exports = {
+  "rules": {
+    "@typescript-eslint/no-non-null-asserted-optional-chain": "error"
+  }
+};
+
+module.exports = {
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "error"
+  }
+};

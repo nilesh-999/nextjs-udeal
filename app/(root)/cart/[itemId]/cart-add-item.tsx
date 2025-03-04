@@ -50,12 +50,7 @@ export default function CartAddItem({ itemId }: { itemId: string }) {
                                     <span className='font-bold'>Size:</span> {item.size}
                                 </p>
                             )}
-                            {/* <p className='text-sm'>
-                <span className='font-bold'> Color: </span> {item.color ?? '-'}
-              </p>
-              <p className='text-sm'>
-                <span className='font-bold'> Size: </span> {item.size ?? '-'}
-              </p> */}
+                            
                         </div>
                     </CardContent>
                 </Card>

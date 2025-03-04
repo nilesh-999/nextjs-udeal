@@ -12,7 +12,7 @@ const users: IUserInput[] = [
       fullName: 'Nigesh BourVita',
       street: '111 Main St',
       city: 'Bettiah',
-      province: 'Bihar',
+      province: 'Bihar', 
       postalCode: '10001',
       country: 'India',
       phone: '123-456-7890',
@@ -114,10 +114,7 @@ const data: Data = {
       name: 'Best Sellers',
       href: '/search?tag=best-seller',
     },
-    {
-      name: 'Browsing History',
-      href: '/#browsing-history',
-    },
+  
     {
       name: 'Customer Service',
       href: '/page/customer-service',
@@ -129,23 +126,23 @@ const data: Data = {
   ],
   carousels: [
     {
-      title: 'Most Popular Drafter For Sale',
+      title: '',
       buttonCaption: 'Shop Now',
-      image: '/images/logo1.png',
+      image: '',
       url: '/search?category=Drafter',
       isPublished: true,
     },
     {
-      title: 'Best Seller in Sheet Holder',
+      title: '',
       buttonCaption: 'Shop Now',
-      image: '/images/logo.png',
+      image: '',
       url: '/search?category=Sheet Holder',
       isPublished: true,
     },
     {
-      title: 'Best Seller in Other stuff',
+      title: '',
       buttonCaption: 'Shop Now',
-      image: '/images/logo1.png',
+      image: '',
       url: '/search?category=Other Stuff',
       isPublished: true,
     },

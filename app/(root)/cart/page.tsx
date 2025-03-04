@@ -75,18 +75,16 @@ export default function CartPage() {
                           {item.name}
                         </Link>
                         <div>
-                          <p className='text-sm'>
-                            <span className='font-bold'>
-                              Color:
-                            </span>{' '}
-                            {item.color}
-                          </p>
-                          <p className='text-sm'>
-                            <span className='font-bold'>
-                              Size:
-                            </span>{' '}
-                            {item.size}
-                          </p>
+                        {item.color && (
+                                <p className='text-sm'>
+                                    <span className='font-bold'>Color:</span> {item.color}
+                                </p>
+                            )}
+                          {item.size && (
+                                <p className='text-sm'>
+                                    <span className='font-bold'>Size:</span> {item.size}
+                                </p>
+                            )}
                         </div>
                         <div className='flex gap-2 items-center'>
                           <Select

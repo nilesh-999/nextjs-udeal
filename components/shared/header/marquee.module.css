@@ -1,0 +1,23 @@
+.container {
+    display: flex;
+    flex-shrink: 0;
+    flex-grow: 0;
+    flex-basis: auto;
+    overflow-sx: hidden;
+    width: 100%;
+}
+
+.marquee{
+    display: flex;
+    flex-shrink: 0;
+    flex-grow: 0;
+    flex-basis: auto;
+    min-width: min-content;
+}
+
+.firstMarquee{
+    display: flex;
+    flex-shrink: 0;
+    flex-grow: 0;
+    flex-basis: auto;
+}

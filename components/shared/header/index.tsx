@@ -3,16 +3,19 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Menu from './menu'
 import Search from './search'
-import data from '@/lib/data'
+import data, { BRANDS } from '@/lib/data'
 import { Button } from '@/components/ui/button'
 import { MenuIcon } from 'lucide-react'
-
-
+import SellButton from './sell-button'
+import { Marquee } from './marque'
+import styles from './page.module.css'
 export default function Header() {
   return (
     <header className='bg-black  text-white'>
       <div className='px-2'>
+      
         <div className='flex items-center justify-between'>
+        
           <div className='flex items-center'>
             <Link
               href='/'
@@ -31,14 +34,19 @@ export default function Header() {
                 alt={`${APP_NAME} logo`}
               />
             </Link>
+                 
           </div>
-
-          <div className='hidden md:block flex-1 max-w-xl'>
-            <Search />
+          
+          <div className='flex items-center flex-1 max-w-xl'>
+          <SellButton/>
+            <div className='flex-1'><Search /></div>
           </div>
           <Menu />
         </div>
-        <div className='md:hidden block py-2'>
+        <div className='md:hidden block py-1'>
+        
+            
+            
           <Search />
         </div>
       </div>
@@ -50,7 +58,11 @@ export default function Header() {
           </Button>
           <div className='flex items-center flex-wrap gap-3 overflow-hidden max-h-[42px]'>{data.headerMenus.map((menu) =>(<Link href={menu.href} key={menu.href} className='header-button !p-2'> {menu.name}</Link>))}
           </div>
+          
       </div>
+      <div className='bg-gray-100'> <Marquee>
+        {BRANDS.map(brand => <img src={`/images/${brand}.png`} key={brand} className={styles.brand}/> )}
+        </Marquee></div>
     </header>
   )
 }

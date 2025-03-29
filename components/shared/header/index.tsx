@@ -37,9 +37,9 @@ export default function Header() {
                  
           </div>
           
-          <div className='flex items-center flex-1 max-w-xl'>
+          <div className= 'flex items-center flex-1 max-w-xl'>
           <SellButton/>
-            <div className='flex-1'><Search /></div>
+            <div className='hidden sm:block flex-1'><Search /></div>
           </div>
           <Menu />
         </div>

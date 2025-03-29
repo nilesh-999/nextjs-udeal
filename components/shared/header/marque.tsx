@@ -49,7 +49,7 @@ const Marquee = ({children}: Props) => {
 const marqueeAnimation = {
     x:['0%','-100%'],
     transition: {
-        duration: 6,
+        duration: 80,
         ease: 'linear',
         repeat: Infinity,
     }
@@ -63,10 +63,10 @@ return <div className={styles.container} ref={containerRef}>
         </div>
         {multiplyChildren(multiplier-1)}
         </motion.div>
-    <motion.div
+    {multiplier>1 && (<motion.div
     animate={marqueeAnimation} className={styles.marquee}>
-        {multiplyChildren(multiplier)}
-        </motion.div>
+        {multiplyChildren(multiplier - 1)}
+        </motion.div>)}
     
     
     </div>

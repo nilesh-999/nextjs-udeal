@@ -22,11 +22,11 @@ const users: IUserInput[] = [
   },
   {
     name: 'Mait',
-    email: 'pedo@example.com',
+    email: 'mait@example.com',
     password: bcrypt.hashSync('123456', 5),
     role: 'User',
     address: {
-      fullName: 'Mait Bacha Chor',
+      fullName: 'Mait',
       street: 'By The Sea Beach',
       city: 'Orissa',
       province: 'Orissa',
@@ -107,11 +107,11 @@ const data: Data = {
       href: '/search?tag=new-arrival',
     },
     {
-      name: 'Featured Products',
+      name: 'Collectibles',
       href: '/search?tag=featured',
     },
     {
-      name: 'Best Sellers',
+      name: 'Services',
       href: '/search?tag=best-seller',
     },
   
@@ -150,14 +150,15 @@ const data: Data = {
 
 }
 export const BRANDS= [
-  '1',
-  '2',
-  '3',
-  '4',
-  '5',
-  '6',
-  '7',
-  '8',
-  '9',
+  '   for sale  ',
+  '   lorem ipsum ',
+  '   dolor sit amet ',
+  '   consectetur adipiscing elit ',
+  '   sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ',
+  '   ut enim ad minim veniam ',
+  
+
+  
+  
 ]
 export default data

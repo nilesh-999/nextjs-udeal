@@ -13,6 +13,7 @@ const initialState: Cart = {
   paymentMethod: undefined,
   shippingAddress: undefined,
   deliveryDateIndex: undefined,
+  
 }
 
 interface CartState {

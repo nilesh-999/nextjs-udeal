@@ -19,7 +19,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useToast } from '@/hooks/use-toast'
 import {
   calculateFutureDate,
   formatDateTime,
@@ -37,37 +36,36 @@ import useIsMounted from '@/hooks/use-is-mounted'
 import Link from 'next/link'
 import useCartStore from '@/hooks/use-cart-store'
 import ProductPrice from '@/components/shared/product/product-price'
-import {
-    APP_NAME,
-    AVAILABLE_DELIVERY_DATES,
-    AVAILABLE_PAYMENTS_METHODS,
-    DEFAULT_PAYMENT_METHOD,
+import { 
+  APP_NAME, 
+  AVAILABLE_DELIVERY_DATES, 
+  AVAILABLE_PAYMENTS_METHODS, 
+  DEFAULT_PAYMENT_METHOD 
 } from '@/lib/constants'
+
 const shippingAddressDefaultValues =
   process.env.NODE_ENV === 'development'
     ? {
         fullName: 'Basir',
-        street: 'ramphal chowk',
-        city: 'DELHI',
-        //province: 'PALAM',
-        phone: 'xxxxxxxx',
-        postalCode: '110075',
-        country: 'INDIA',
+        street: '1911, 65 Sherbrooke Est',
+        city: 'Montreal',
+        province: 'Quebec',
+        phone: '4181234567',
+        postalCode: 'H2X 1C4',
+        country: 'Canada',
       }
     : {
         fullName: '',
         street: '',
         city: '',
-        //province: '',
+        province: '',
         phone: '',
         postalCode: '',
         country: '',
       }
 
 const CheckoutForm = () => {
-  
   const router = useRouter()
-  
 
   const {
     cart: {
@@ -84,9 +82,13 @@ const CheckoutForm = () => {
     setPaymentMethod,
     updateItem,
     removeItem,
-    clearCart,
     setDeliveryDateIndex,
   } = useCartStore()
+  const selectedDelivery =
+  deliveryDateIndex !== undefined &&
+  AVAILABLE_DELIVERY_DATES[deliveryDateIndex]
+    ? AVAILABLE_DELIVERY_DATES[deliveryDateIndex]
+    : AVAILABLE_DELIVERY_DATES[0]
   const isMounted = useIsMounted()
 
   const shippingAddressForm = useForm<ShippingAddress>({
@@ -105,7 +107,7 @@ const CheckoutForm = () => {
     shippingAddressForm.setValue('city', shippingAddress.city)
     shippingAddressForm.setValue('country', shippingAddress.country)
     shippingAddressForm.setValue('postalCode', shippingAddress.postalCode)
-    //shippingAddressForm.setValue('province', shippingAddress.province)
+    shippingAddressForm.setValue('province', shippingAddress.province)
     shippingAddressForm.setValue('phone', shippingAddress.phone)
   }, [items, isMounted, router, shippingAddress, shippingAddressForm])
 
@@ -119,6 +121,7 @@ const CheckoutForm = () => {
     
   }
   const handleSelectPaymentMethod = () => {
+   
     setIsAddressSelected(true)
     setIsPaymentMethodSelected(true)
   }
@@ -164,7 +167,7 @@ const CheckoutForm = () => {
               Place Your Order
             </Button>
             <p className='text-xs text-center py-2'>
-              By placing your order, you agree to {APP_NAME}&apos;s{' '}
+              By placing your order, you agree to {APP_NAME }&apos;s{' '}
               <Link href='/page/privacy-policy'>privacy notice</Link> and
               <Link href='/page/conditions-of-use'> conditions of use</Link>.
             </p>
@@ -230,7 +233,7 @@ const CheckoutForm = () => {
                   <p>
                     {shippingAddress.fullName} <br />
                     {shippingAddress.street} <br />
-                    {`${shippingAddress.city}, ${shippingAddress.postalCode}, ${shippingAddress.country}`}
+                    {`${shippingAddress.city}, ${shippingAddress.province}, ${shippingAddress.postalCode}, ${shippingAddress.country}`}
                   </p>
                 </div>
                 <div className='col-span-2'>
@@ -316,7 +319,7 @@ const CheckoutForm = () => {
                               </FormItem>
                             )}
                           />
-                          {/* <FormField
+                          <FormField
                             control={shippingAddressForm.control}
                             name='province'
                             render={({ field }) => (
@@ -331,7 +334,7 @@ const CheckoutForm = () => {
                                 <FormMessage />
                               </FormItem>
                             )}
-                          /> */}
+                          />
                           <FormField
                             control={shippingAddressForm.control}
                             name='country'
@@ -520,8 +523,7 @@ const CheckoutForm = () => {
                         {
                           formatDateTime(
                             calculateFutureDate(
-                              AVAILABLE_DELIVERY_DATES[deliveryDateIndex!]
-                                .daysToDeliver
+                              selectedDelivery.daysToDeliver
                             )
                           ).dateOnly
                         }
@@ -588,16 +590,16 @@ const CheckoutForm = () => {
 
                           <ul>
                             <RadioGroup
-                              value={
-                                AVAILABLE_DELIVERY_DATES[deliveryDateIndex!].name
-                              }
+
+                              value={deliveryDateIndex?.toString()}
                               onValueChange={(value) =>
                                 setDeliveryDateIndex(
                                   AVAILABLE_DELIVERY_DATES.findIndex(
                                     (address) => address.name === value
-                                  )!
+                                  )
                                 )
                               }
+                               
                             >
                               {AVAILABLE_DELIVERY_DATES.map((dd) => (
                                 <div key={dd.name} className='flex'>

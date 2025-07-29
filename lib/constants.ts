@@ -16,7 +16,7 @@ export const AVAILABLE_PAYMENTS_METHODS = [
        {
         name: 'Stripe',
         commission: 0,
-        isDefault:true
+        isDefault:false,
        },
        {
         name: 'Cash On Delivery',
@@ -26,7 +26,7 @@ export const AVAILABLE_PAYMENTS_METHODS = [
 
 ]
 
-export const DEFAULT_PAYMENT_METHOD = process.env.DEFAULT_PAYMENT_METHOD || 'Stripe'
+export const DEFAULT_PAYMENT_METHOD = process.env.DEFAULT_PAYMENT_METHOD || 'PayPal'
 
 export const AVAILABLE_DELIVERY_DATES = [
     {

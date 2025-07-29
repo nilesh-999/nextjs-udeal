@@ -2,7 +2,7 @@
 
 import {OrderItem, ShippingAddress} from '@/types'
 import { round2 } from '../utils'
-import { AVAILABLE_DELIVERY_DATES, FREE_SHIPPING_MIN_PRICE } from '../constants'
+import { AVAILABLE_DELIVERY_DATES} from '../constants'
 
 
 export const calcDeliveryDateAndPrice = async ({
@@ -39,7 +39,7 @@ export const calcDeliveryDateAndPrice = async ({
     AVAILABLE_DELIVERY_DATES,
     deliverDateIndex:
       deliveryDateIndex === undefined
-        ? AVAILABLE_DELIVERY_DATES.length - 1
+        ? AVAILABLE_DELIVERY_DATES.length-1
         : deliveryDateIndex,
     itemsPrice,
     shippingPrice,
@@ -47,4 +47,5 @@ export const calcDeliveryDateAndPrice = async ({
     totalPrice,
   }
 }
+
 

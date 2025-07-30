@@ -47,5 +47,5 @@ export const AVAILABLE_DELIVERY_DATES = [
         daysToDeliver: 5,
         shippingPrice: 4.9,
         freeShippingMinPrice: 35,
-    }
+    },
 ]

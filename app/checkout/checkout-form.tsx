@@ -66,6 +66,9 @@ const shippingAddressDefaultValues =
         country: '',
       }
 
+
+
+
 const CheckoutForm = () => {
   const router = useRouter()
 
@@ -102,7 +105,7 @@ const CheckoutForm = () => {
     setShippingAddress(values)
     setIsAddressSelected(true)
   }
-
+const [selectedValue, setSelectedValue] = useState<string | undefined>(deliveryDateIndex?.toString());
   useEffect(() => {
     if (!isMounted || !shippingAddress) return
     shippingAddressForm.setValue('fullName', shippingAddress.fullName)
@@ -113,7 +116,7 @@ const CheckoutForm = () => {
     shippingAddressForm.setValue('state', shippingAddress.state)
     shippingAddressForm.setValue('phone', shippingAddress.phone)
   }, [items, isMounted, router, shippingAddress, shippingAddressForm])
-
+  console.log(deliveryDateIndex)
   const [isAddressSelected, setIsAddressSelected] = useState<boolean>(false)
   const [isPaymentMethodSelected, setIsPaymentMethodSelected] =
     useState<boolean>(false)
@@ -619,14 +622,13 @@ const CheckoutForm = () => {
                           <ul>
                             <RadioGroup
 
-                              value={deliveryDateIndex?.toString()}
-                              onValueChange={(value) =>
-                                setDeliveryDateIndex(
-                                  AVAILABLE_DELIVERY_DATES.findIndex(
-                                    (address) => address.name === value
-                                  )
-                                )
-                              }
+                              value={selectedValue}
+  onValueChange={(value) => {
+    setSelectedValue(value);
+    const index = AVAILABLE_DELIVERY_DATES.findIndex((address) => address.name === value);
+    setDeliveryDateIndex(index);
+  }}
+                              
                                
                             >
                               {AVAILABLE_DELIVERY_DATES.map((dd) => (

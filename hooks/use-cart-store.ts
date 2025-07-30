@@ -150,16 +150,19 @@ const useCartStore = create(
       setDeliveryDateIndex: async (index: number) => {
         const { items, shippingAddress } = get().cart
 
-        set({
-          cart: {
-            ...get().cart,
-            ...(await calcDeliveryDateAndPrice({
-              items,
-              shippingAddress,
-              deliveryDateIndex: index,
-            })),
-          },
-        })
+  const updatedCart = {
+    ...get().cart,
+    deliveryDateIndex: index,
+    ...(await calcDeliveryDateAndPrice({
+      items,
+      shippingAddress,
+      deliveryDateIndex: index,
+    })),
+  }
+
+  return set({
+    cart: updatedCart,
+  })
       },
        clearCart: () => {
       set({ cart: {...get().cart, items: [],} })},

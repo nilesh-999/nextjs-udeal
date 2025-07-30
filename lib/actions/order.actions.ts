@@ -6,7 +6,7 @@ import { AVAILABLE_DELIVERY_DATES} from '../constants'
 import { connectToDatabase } from '../db'
 import { auth } from '@/auth'
 import { OrderInputSchema } from '../validator'
-import Order from '../db/models/order.model'
+import Order from '../db/model.order.model'
 
 export const createOrder = async (clientSideCart: Cart) => {
   try {

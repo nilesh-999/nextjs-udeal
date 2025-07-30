@@ -42,6 +42,8 @@ import {
   AVAILABLE_PAYMENTS_METHODS, 
   DEFAULT_PAYMENT_METHOD 
 } from '@/lib/constants'
+import { toast } from '@/hooks/use-toast'
+import { createOrder } from '@/lib/actions/order.actions'
 
 const shippingAddressDefaultValues =
   process.env.NODE_ENV === 'development'
@@ -49,7 +51,7 @@ const shippingAddressDefaultValues =
         fullName: 'Basir',
         street: '1911, 65 Sherbrooke Est',
         city: 'Montreal',
-        province: 'Quebec',
+        state: 'Quebec',
         phone: '4181234567',
         postalCode: 'H2X 1C4',
         country: 'Canada',
@@ -58,7 +60,7 @@ const shippingAddressDefaultValues =
         fullName: '',
         street: '',
         city: '',
-        province: '',
+        state: '',
         phone: '',
         postalCode: '',
         country: '',
@@ -83,6 +85,7 @@ const CheckoutForm = () => {
     updateItem,
     removeItem,
     setDeliveryDateIndex,
+    clearCart
   } = useCartStore()
   const selectedDelivery =
   deliveryDateIndex !== undefined &&
@@ -107,7 +110,7 @@ const CheckoutForm = () => {
     shippingAddressForm.setValue('city', shippingAddress.city)
     shippingAddressForm.setValue('country', shippingAddress.country)
     shippingAddressForm.setValue('postalCode', shippingAddress.postalCode)
-    shippingAddressForm.setValue('province', shippingAddress.province)
+    shippingAddressForm.setValue('state', shippingAddress.state)
     shippingAddressForm.setValue('phone', shippingAddress.phone)
   }, [items, isMounted, router, shippingAddress, shippingAddressForm])
 
@@ -118,7 +121,32 @@ const CheckoutForm = () => {
     useState<boolean>(false)
 
   const handlePlaceOrder = async () => {
-    
+    const res = await createOrder({
+      items,
+      shippingAddress,
+      expectedDeliveryDate: calculateFutureDate(
+        AVAILABLE_DELIVERY_DATES[deliveryDateIndex!].daysToDeliver
+      ),
+      deliveryDateIndex,
+      paymentMethod,
+      itemsPrice,
+      shippingPrice,
+      taxPrice,
+      totalPrice,
+    })
+    if (!res.success) {
+      toast({
+        description: res.message,
+        variant: 'destructive',
+      })
+    } else {
+      toast({
+        description: res.message,
+        variant: 'default',
+      })
+      clearCart()
+      router.push(`/checkout/${res.data?.orderId}`)
+    }
   }
   const handleSelectPaymentMethod = () => {
    
@@ -233,7 +261,7 @@ const CheckoutForm = () => {
                   <p>
                     {shippingAddress.fullName} <br />
                     {shippingAddress.street} <br />
-                    {`${shippingAddress.city}, ${shippingAddress.province}, ${shippingAddress.postalCode}, ${shippingAddress.country}`}
+                    {`${shippingAddress.city}, ${shippingAddress.state}, ${shippingAddress.postalCode}, ${shippingAddress.country}`}
                   </p>
                 </div>
                 <div className='col-span-2'>
@@ -321,13 +349,13 @@ const CheckoutForm = () => {
                           />
                           <FormField
                             control={shippingAddressForm.control}
-                            name='province'
+                            name='state'
                             render={({ field }) => (
                               <FormItem className='w-full'>
-                                <FormLabel>Province</FormLabel>
+                                <FormLabel>State</FormLabel>
                                 <FormControl>
                                   <Input
-                                    placeholder='Enter province'
+                                    placeholder='Enter state'
                                     {...field}
                                   />
                                 </FormControl>

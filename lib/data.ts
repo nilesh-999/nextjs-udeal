@@ -127,22 +127,22 @@ const data: Data = {
   carousels: [
     {
       title: '',
-      buttonCaption: 'Shop Now',
-      image: '',
+      buttonCaption: '',
+      image: '/images/banner1.jpg',
       url: '/search?category=Drafter',
       isPublished: true,
     },
     {
       title: '',
       buttonCaption: 'Shop Now',
-      image: '',
+      image: '/images/banner2.jpg',
       url: '/search?category=Sheet Holder',
       isPublished: true,
     },
     {
       title: '',
-      buttonCaption: 'Shop Now',
-      image: '',
+      buttonCaption: '',
+      image: '/images/banner3.jpg',
       url: '/search?category=Other Stuff',
       isPublished: true,
     },

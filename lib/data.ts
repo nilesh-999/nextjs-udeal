@@ -129,7 +129,7 @@ const data: Data = {
       title: '',
       buttonCaption: 'no',
       image: '/images/banner1.jpg',
-      url: '/search?category=Drafter',
+      url: '',
       isPublished: true,
     },
     {
@@ -143,7 +143,7 @@ const data: Data = {
       title: '',
       buttonCaption: 'no',
       image: '/images/banner3.jpg',
-      url: '/search?category=Other Stuff',
+      url: '',
       isPublished: true,
     },
   ],

@@ -43,7 +43,7 @@ export default function HomeCarousel( {
                     {items.map((item) => (
                         <CarouselItem key={item.title}>
                         <Link href={item.url}>
-                        <div className='flex aspect-[16/6] items-center justify-center p-6 relative -m-1'>
+                        <div className='flex md:aspect-[16/4] max-sm:aspect-[14/4] items-center justify-center p-6 relative -m-1 '>
                           <Image
                             src={item.image}
                             alt={item.title}
@@ -51,13 +51,16 @@ export default function HomeCarousel( {
                             className='object-cover'
                             priority
                             />
-                          <div className='absolute w-1/3 left-16 md:left-32 top-1/2 transform -translate-y-1/2'>
+                          <div className='absolute w-1/3 left-16 md:left-32 top-1/2 bottom-1/2 transform -translate-y-1/2'>
                           <h2 className='text-xl md:text-6xl font-bold mb-4 text-primary  '>
                             {item.title}
                           </h2>
-                          <Button className='hidden md:block'>
+                          {
+                            item.buttonCaption=="no"? <p></p>:<Button className='hidden md:block'>
                             {item.buttonCaption}
                             </Button>
+                          }
+                          
                         </div>
                         </div>
                         </Link>

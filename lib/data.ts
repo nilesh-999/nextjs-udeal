@@ -127,7 +127,7 @@ const data: Data = {
   carousels: [
     {
       title: '',
-      buttonCaption: '',
+      buttonCaption: 'no',
       image: '/images/banner1.jpg',
       url: '/search?category=Drafter',
       isPublished: true,
@@ -141,7 +141,7 @@ const data: Data = {
     },
     {
       title: '',
-      buttonCaption: '',
+      buttonCaption: 'no',
       image: '/images/banner3.jpg',
       url: '/search?category=Other Stuff',
       isPublished: true,

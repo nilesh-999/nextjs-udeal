@@ -62,9 +62,9 @@ export default function OrderDetailsForm({
     const res = await createRazorPayOrder(order._id)
     if (!res.success)
       return toast({
-        //description: res.message,
+        description: res.message,
         variant: 'destructive',
-      })
+      })  
     return res.data
   }
   const handleApproveRazorPayOrder = async (data: { orderID: string }) => {

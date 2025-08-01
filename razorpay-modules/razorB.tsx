@@ -54,14 +54,25 @@ const RazorpayButton: React.FC<RazorpayButtonProps> = ({
       name: 'Your Company',
       description: 'Payment for order',
       handler: async (response: RazorpayPaymentResponse) => {
-        try {
-          // Call your backend to approve the payment
-          await onApprove({ orderID: response.razorpay_payment_id });
-          alert('Payment successful and approved!');
-        } catch (error) {
-          alert('Payment succeeded but approval failed');
-          console.error(error);
-        }
+        if (!response.razorpay_order_id) {
+    alert('Payment failed: Missing order ID');
+    return;
+  }
+  try {
+    await onApprove({ orderID: response.razorpay_order_id });
+    alert('Payment successful and approved!');
+  } catch (error) {
+    alert('Payment succeeded but approval failed');
+    console.error(error);}
+        
+        // try {
+        //   // Call your backend to approve the payment
+        //   await onApprove({ orderID: response.razorpay_order_id });
+        //   alert('Payment successful and approved!');
+        // } catch (error) {
+        //   alert('Payment succeeded but approval failed');
+        //   console.error(error);
+        // }
       },
       prefill: {
         name,

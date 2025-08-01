@@ -77,7 +77,7 @@ export async function createRazorPayOrder(orderId: string) {
       await order.save()
       return {
         success: true,
-        message: 'PayPal order created successfully',
+        message: 'RazorPay order created successfully',
         data: razorpayOrder.id,
       }
     } else {

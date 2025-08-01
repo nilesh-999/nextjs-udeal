@@ -6,7 +6,10 @@ import { AVAILABLE_DELIVERY_DATES} from '../constants'
 import { connectToDatabase } from '../db'
 import { auth } from '@/auth'
 import { OrderInputSchema } from '../validator'
-import Order from '../db/model.order.model'
+import Order, { IOrder } from '../db/model.order.model'
+import { razorpay } from '../razorpay'
+import { sendPurchaseReceipt } from '@/emails'
+import { revalidatePath } from 'next/cache'
 
 export const createOrder = async (clientSideCart: Cart) => {
   try {
@@ -53,6 +56,74 @@ export const createOrderFromCart = async (
   })
   return await Order.create(order)
 }
+
+export async function getOrderById(orderId: string): Promise<IOrder> {
+  await connectToDatabase()
+  const order = await Order.findById(orderId)
+  return JSON.parse(JSON.stringify(order))
+}
+export async function createRazorPayOrder(orderId: string) {
+  await connectToDatabase()
+  try {
+    const order = await Order.findById(orderId)
+    if (order) {
+      const razorpayOrder = await razorpay.createOrder(order.totalPrice)
+      order.paymentResult = {
+        id: razorpayOrder.id,
+        email_address: '',
+        status: '',
+        pricePaid: '0',
+      }
+      await order.save()
+      return {
+        success: true,
+        message: 'PayPal order created successfully',
+        data: razorpayOrder.id,
+      }
+    } else {
+      throw new Error('Order not found')
+    }
+  } catch (err) {
+    return { success: false, message: formatError(err) }
+  }
+}
+
+export async function approveRazorPayOrder(
+  orderId: string,
+  data: { orderID: string }
+) {
+  await connectToDatabase()
+  try {
+    const order = await Order.findById(orderId).populate('user', 'email')
+    if (!order) throw new Error('Order not found')
+    const captureData = await razorpay.capturePayment(data.orderID)
+    if (
+      !captureData ||
+      captureData.id !== order.paymentResult?.id ||
+      captureData.status !== 'COMPLETED'
+    )
+      throw new Error('Error in razorpay payment')
+    order.isPaid = true
+    order.paidAt = new Date()
+    order.paymentResult = {
+      id: captureData.id,
+      status: captureData.status,
+      email_address: captureData.payer.email_address,
+      pricePaid:
+        captureData.purchase_units[0]?.payments?.captures[0]?.amount?.value,
+    }
+    await order.save()
+    await sendPurchaseReceipt({ order })
+    revalidatePath(`/account/orders/${orderId}`)
+    return {
+      success: true,
+      message: 'Your order has been successfully paid by RazorPay',
+    }
+  } catch (err) {
+    return { success: false, message: formatError(err) }
+  }
+}
+
 export const calcDeliveryDateAndPrice = async ({
   items,
   shippingAddress,

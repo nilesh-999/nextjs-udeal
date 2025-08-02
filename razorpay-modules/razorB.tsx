@@ -56,7 +56,7 @@ const RazorpayButton: React.FC<RazorpayButtonProps> = ({
       name: 'Your Company',
       description: 'Payment for order',
       handler: async (response: RazorpayPaymentResponse) => {
-        if (!response.razorpay_order_id) {
+        if (!response.razorpay_payment_id) {
     alert('Payment failed: Missing order ID');
     return;
   }

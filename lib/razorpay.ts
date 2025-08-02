@@ -1,44 +1,50 @@
-const base = process.env.RAZORPAY_API_URL || "https://api.razorpay.com/v1"
+const base = process.env.RAZORPAY_API_URL || 'https://api.razorpay.com/v1'
 
 export const razorpay = {
-    createOrder: async function createOrder(price: number) {
-  const { RAZORPAY_API_KEY, RAZORPAY_API_SECRET } = process.env
-  const auth = Buffer.from(RAZORPAY_API_KEY + ':' + RAZORPAY_API_SECRET).toString('base64')
-  const url = `${base}/orders`
-  const response = await fetch(url, {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Basic ${auth}`,
-    },
-    body: JSON.stringify({
-      amount: price * 100, // amount in paise
-      currency: 'INR',
-      receipt: `order_rcptid_${Date.now()}`,
-      payment_capture: 1,
-    }),
-  })
-  return handleResponse(response)
-    },
-    capturePayment: async function capturePayment(paymentId: string, amount: number) {
-  const { RAZORPAY_API_KEY, RAZORPAY_API_SECRET } = process.env
-  const auth = Buffer.from(RAZORPAY_API_KEY + ':' + RAZORPAY_API_SECRET).toString('base64')
-  const url = `${base}/payments/${paymentId}/capture`
-  const response = await fetch(url, {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Basic ${auth}`,
-    },
-    body: JSON.stringify({
-      amount: amount * 100, // in paise
-      currency: 'INR',
-    }),
-  })
-  return handleResponse(response)
-},
+  createOrder: async function createOrder(price: number) {
+    const { RAZORPAY_API_KEY, RAZORPAY_API_SECRET } = process.env
+    const auth = Buffer.from(
+      RAZORPAY_API_KEY + ':' + RAZORPAY_API_SECRET
+    ).toString('base64')
+    const url = `${base}/orders`
+    const response = await fetch(url, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${auth}`,
+      },
+      body: JSON.stringify({
+        amount: price * 100,
+        currency: 'INR',
+        receipt: `order_rcptid_${Date.now()}`,
+        payment_capture: 1,
+      }),
+    })
+    return handleResponse(response)
+  },
+  capturePayment: async function capturePayment(
+    paymentId: string,
+    amount: number
+  ) {
+    const { RAZORPAY_API_KEY, RAZORPAY_API_SECRET } = process.env
+    const auth = Buffer.from(
+      RAZORPAY_API_KEY + ':' + RAZORPAY_API_SECRET
+    ).toString('base64')
+    const url = `${base}/payments/${paymentId}/capture`
+    const response = await fetch(url, {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Basic ${auth}`,
+      },
+      body: JSON.stringify({
+        amount: amount * 100,
+        currency: 'INR',
+      }),
+    })
+    return handleResponse(response)
+  },
 }
-
 
 // async function generateAccessToken() {
 //   const { RAZORPAY_CLIENT_ID, RAZORPAY_APP_SECRET } = process.env
@@ -65,4 +71,3 @@ async function handleResponse(response: any) {
   const errorMessage = await response.text()
   throw new Error(errorMessage)
 }
-

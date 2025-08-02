@@ -65,7 +65,7 @@ export default function OrderDetailsForm({
         description: res.message,
         variant: 'destructive',
       })  
-    return res.data
+    return {id:res.data}
   }
   const handleApproveRazorPayOrder = async (data: { orderID: string }) => {
     const res = await approveRazorPayOrder(order._id, data)

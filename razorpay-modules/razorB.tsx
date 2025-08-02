@@ -49,7 +49,7 @@ const RazorpayButton: React.FC<RazorpayButtonProps> = ({
     }
 
     const options = {
-      key: 'your_key_id', // Replace with your Razorpay key
+      key: 'rzp_test_XXwhHvyTyVw9F5', // Replace with your Razorpay key
       order_id: orderData.id,
       name: 'Your Company',
       description: 'Payment for order',

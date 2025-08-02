@@ -3,7 +3,7 @@ const base = process.env.RAZORPAY_API_URL || "https://api.razorpay.com/v1"
 export const razorpay = {
     createOrder: async function createOrder(price: number){
         const accessToken = await generateAccessToken()
-        const url = `${base}/v2/checkout/orders`
+        const url = `${base}/v1/checkout/orders`
         const respone = await fetch(url, {
             method: 'post',
             headers: {
@@ -26,7 +26,7 @@ export const razorpay = {
     },
     capturePayment: async function capturePayment(orderId: string) {
         const accessToken = await generateAccessToken()
-        const url = `${base}/payments/${orderId}/capture`
+        const url = `${base}/payments/:payment_id/capture`
         const response = await fetch(url, {
             method: 'post',
             headers: {

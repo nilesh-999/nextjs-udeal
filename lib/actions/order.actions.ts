@@ -94,7 +94,6 @@ export async function approveRazorPayOrder(
 ) {
   await connectToDatabase()
   try {
-    // Fetch order with populated user field
     const order = await Order.findById(orderId).populate('user', [
       'email',
       'name',
@@ -127,26 +126,26 @@ export async function approveRazorPayOrder(
     order.paymentResult = {
       id: captureData.id,
       status: captureData.status,
-      email_address: order.user.email, // Use populated user email
+      // Fix the type checking here
+      email_address:
+        typeof order.user === 'string' ? order.user : order.user.email,
       pricePaid: (captureData.amount / 100).toString(),
     }
 
-    // Save order first
     await order.save()
 
     try {
-      // Add logging for email sending
-      console.log('Attempting to send email to:', order.user.email)
+      console.log(
+        'Attempting to send email to:',
+        typeof order.user === 'string' ? order.user : order.user.email
+      )
       await sendPurchaseReceipt({ order })
       console.log('Email sent successfully')
     } catch (emailError) {
       console.error('Failed to send email:', emailError)
-      // Don't throw error here, just log it
     }
 
-    // Revalidate the page
     revalidatePath(`/account/orders/${orderId}`)
-
     return { success: true, message: 'Payment successful' }
   } catch (err: any) {
     console.error('Payment approval error:', err)

@@ -36,35 +36,36 @@ import useIsMounted from '@/hooks/use-is-mounted'
 import Link from 'next/link'
 import useCartStore from '@/hooks/use-cart-store'
 import ProductPrice from '@/components/shared/product/product-price'
-import { 
-  APP_NAME, 
-  AVAILABLE_DELIVERY_DATES, 
-  AVAILABLE_PAYMENTS_METHODS, 
-  DEFAULT_PAYMENT_METHOD 
+import {
+  APP_NAME,
+  AVAILABLE_DELIVERY_DATES,
+  AVAILABLE_PAYMENTS_METHODS,
+  DEFAULT_PAYMENT_METHOD
 } from '@/lib/constants'
 import { toast } from '@/hooks/use-toast'
-import { createOrder } from '@/lib/actions/order.actions'
+import { createOrder, createRazorPayOrder, approveRazorPayOrder } from '@/lib/actions/order.actions'
+import RazorpayButton from '@/razorpay-modules/razorB'
 
 const shippingAddressDefaultValues =
   process.env.NODE_ENV === 'development'
     ? {
-        fullName: 'Basir',
-        street: '1911, 65 Sherbrooke Est',
-        city: 'Montreal',
-        state: 'Quebec',
-        phone: '4181234567',
-        postalCode: 'H2X 1C4',
-        country: 'Canada',
-      }
+      fullName: 'Basir',
+      street: '1911, 65 Sherbrooke Est',
+      city: 'Montreal',
+      state: 'Quebec',
+      phone: '4181234567',
+      postalCode: 'H2X 1C4',
+      country: 'Canada',
+    }
     : {
-        fullName: '',
-        street: '',
-        city: '',
-        state: '',
-        phone: '',
-        postalCode: '',
-        country: '',
-      }
+      fullName: '',
+      street: '',
+      city: '',
+      state: '',
+      phone: '',
+      postalCode: '',
+      country: '',
+    }
 
 
 
@@ -91,10 +92,10 @@ const CheckoutForm = () => {
     clearCart
   } = useCartStore()
   const selectedDelivery =
-  deliveryDateIndex !== undefined &&
-  AVAILABLE_DELIVERY_DATES[deliveryDateIndex]
-    ? AVAILABLE_DELIVERY_DATES[deliveryDateIndex]
-    : AVAILABLE_DELIVERY_DATES[0]
+    deliveryDateIndex !== undefined &&
+      AVAILABLE_DELIVERY_DATES[deliveryDateIndex]
+      ? AVAILABLE_DELIVERY_DATES[deliveryDateIndex]
+      : AVAILABLE_DELIVERY_DATES[0]
   const isMounted = useIsMounted()
 
   const shippingAddressForm = useForm<ShippingAddress>({
@@ -105,7 +106,7 @@ const CheckoutForm = () => {
     setShippingAddress(values)
     setIsAddressSelected(true)
   }
-const [selectedValue, setSelectedValue] = useState<string | undefined>(deliveryDateIndex?.toString());
+  const [selectedValue, setSelectedValue] = useState<string | undefined>(deliveryDateIndex?.toString());
   useEffect(() => {
     if (!isMounted || !shippingAddress) return
     shippingAddressForm.setValue('fullName', shippingAddress.fullName)
@@ -122,6 +123,7 @@ const [selectedValue, setSelectedValue] = useState<string | undefined>(deliveryD
     useState<boolean>(false)
   const [isDeliveryDateSelected, setIsDeliveryDateSelected] =
     useState<boolean>(false)
+  const [currentOrderId, setCurrentOrderId] = useState<string>('')
 
   const handlePlaceOrder = async () => {
     const res = await createOrder({
@@ -152,7 +154,7 @@ const [selectedValue, setSelectedValue] = useState<string | undefined>(deliveryD
     }
   }
   const handleSelectPaymentMethod = () => {
-   
+
     setIsAddressSelected(true)
     setIsPaymentMethodSelected(true)
   }
@@ -198,7 +200,7 @@ const [selectedValue, setSelectedValue] = useState<string | undefined>(deliveryD
               Place Your Order
             </Button>
             <p className='text-xs text-center py-2'>
-              By placing your order, you agree to {APP_NAME }&apos;s{' '}
+              By placing your order, you agree to {APP_NAME}&apos;s{' '}
               <Link href='/page/privacy-policy'>privacy notice</Link> and
               <Link href='/page/conditions-of-use'> conditions of use</Link>.
             </p>
@@ -247,6 +249,62 @@ const [selectedValue, setSelectedValue] = useState<string | undefined>(deliveryD
       </CardContent>
     </Card>
   )
+
+  const handleCreateRazorPayOrder = async () => {
+    try {
+      const orderRes = await createOrder({
+        items,
+        shippingAddress,
+        expectedDeliveryDate: calculateFutureDate(
+          AVAILABLE_DELIVERY_DATES[deliveryDateIndex!].daysToDeliver
+        ),
+        deliveryDateIndex,
+        paymentMethod,
+        itemsPrice,
+        shippingPrice,
+        taxPrice,
+        totalPrice,
+      })
+
+      if (!orderRes.success || !orderRes.data?.orderId) {
+        toast({
+          description: orderRes.message,
+          variant: 'destructive',
+        })
+        throw new Error('Failed to create order');
+      }
+
+      const res = await createRazorPayOrder(orderRes.data.orderId)
+      if (!res.success) {
+        toast({
+          description: res.message,
+          variant: 'destructive',
+        })
+        throw new Error('Failed to create Razorpay order');
+      }
+      setCurrentOrderId(orderRes.data.orderId)
+      return { id: res.data }
+    } catch (error) {
+      console.error('Error creating order:', error);
+      throw error; // This ensures the function never returns null
+    }
+  }
+
+  const handleApproveRazorPayOrder = async (data: { orderID: string }) => {
+    if (!currentOrderId) {
+      toast({
+        description: 'Order ID not found',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    const res = await approveRazorPayOrder(currentOrderId, data)
+    toast({
+      description: res.message,
+      variant: res.success ? 'default' : 'destructive',
+    })
+  }
 
   return (
     <main className='max-w-6xl mx-auto highlight-link'>
@@ -623,13 +681,13 @@ const [selectedValue, setSelectedValue] = useState<string | undefined>(deliveryD
                             <RadioGroup
 
                               value={selectedValue}
-  onValueChange={(value) => {
-    setSelectedValue(value);
-    const index = AVAILABLE_DELIVERY_DATES.findIndex((address) => address.name === value);
-    setDeliveryDateIndex(index);
-  }}
-                              
-                               
+                              onValueChange={(value) => {
+                                setSelectedValue(value);
+                                const index = AVAILABLE_DELIVERY_DATES.findIndex((address) => address.name === value);
+                                setDeliveryDateIndex(index);
+                              }}
+
+
                             >
                               {AVAILABLE_DELIVERY_DATES.map((dd) => (
                                 <div key={dd.name} className='flex'>
@@ -650,7 +708,7 @@ const [selectedValue, setSelectedValue] = useState<string | undefined>(deliveryD
                                     </div>
                                     <div>
                                       {(dd.freeShippingMinPrice > 0 &&
-                                      itemsPrice >= dd.freeShippingMinPrice
+                                        itemsPrice >= dd.freeShippingMinPrice
                                         ? 0
                                         : dd.shippingPrice) === 0 ? (
                                         'FREE Shipping'
@@ -710,6 +768,15 @@ const [selectedValue, setSelectedValue] = useState<string | undefined>(deliveryD
                   </div>
                 </CardContent>
               </Card>
+            </div>
+          )}
+          {paymentMethod === 'RazorPay' && (
+            <div>
+              <RazorpayButton
+                createOrder={handleCreateRazorPayOrder}
+                onApprove={handleApproveRazorPayOrder}
+                razorpayKey={process.env.RAZORPAY_API_KEY!}
+              />
             </div>
           )}
           <CheckoutFooter />

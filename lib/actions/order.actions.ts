@@ -1,8 +1,8 @@
 'use server'
 
-import {Cart, OrderItem, ShippingAddress} from '@/types'
+import { Cart, OrderItem, ShippingAddress } from '@/types'
 import { formatError, round2 } from '../utils'
-import { AVAILABLE_DELIVERY_DATES} from '../constants'
+import { AVAILABLE_DELIVERY_DATES } from '../constants'
 import { connectToDatabase } from '../db'
 import { auth } from '@/auth'
 import { OrderInputSchema } from '../validator'
@@ -91,35 +91,40 @@ export async function createRazorPayOrder(orderId: string) {
 export async function approveRazorPayOrder(
   orderId: string,
   data: { orderID: string }
-) {co
+) {
   await connectToDatabase()
   try {
     const order = await Order.findById(orderId).populate('user', 'email')
     if (!order) throw new Error('Order not found')
-    const captureData = await razorpay.capturePayment(data.orderID, order.totalPrice)
-    if (
-      !captureData ||
-      //captureData.id !== order.paymentResult?.id ||
-      captureData.status !== 'captured'
+
+    console.log('Attempting to capture payment:', data.orderID)
+    const captureData = await razorpay.capturePayment(
+      data.orderID,
+      order.totalPrice
     )
+
+    if (!captureData || captureData.status !== 'captured') {
+      console.error('Payment capture failed:', captureData)
       throw new Error('Error in razorpay payment')
+    }
+
+    // Type assertion to handle populated user
+    const userEmail =
+      typeof order.user === 'string' ? order.user : order.user.email
+
     order.isPaid = true
     order.paidAt = new Date()
     order.paymentResult = {
       id: captureData.id,
       status: captureData.status,
-      email_address: captureData.user.email ,//|| order.user.email,
-      pricePaid:
-        (captureData.amount / 100). toString(), // Razorpay returns amount in paise
+      email_address: userEmail,
+      pricePaid: (captureData.amount / 100).toString(),
     }
+
     await order.save()
-    await sendPurchaseReceipt({ order })
-    revalidatePath(`/account/orders/${orderId}`)
-    return {
-      success: true,
-      message: 'Your order has been successfully paid by RazorPay',
-    }
+    return { success: true, message: 'Payment successful' }
   } catch (err) {
+    console.error('Payment approval error:', err)
     return { success: false, message: formatError(err) }
   }
 }
@@ -133,22 +138,25 @@ export const calcDeliveryDateAndPrice = async ({
   items: OrderItem[]
   shippingAddress?: ShippingAddress
 }) => {
-  
   const itemsPrice = round2(
     items.reduce((acc, item) => acc + item.price * item.quantity, 0)
   )
-  const deliveryDate = 
-      AVAILABLE_DELIVERY_DATES[
-        deliveryDateIndex === undefined ? AVAILABLE_DELIVERY_DATES.length - 1 : deliveryDateIndex
-      ]
-  
-   const shippingPrice = !shippingAddress || !deliveryDate
-    ? undefined
-    : deliveryDate.freeShippingMinPrice > 0 && itemsPrice >= deliveryDate.freeShippingMinPrice
-    ? 0
-    : deliveryDate.shippingPrice
+  const deliveryDate =
+    AVAILABLE_DELIVERY_DATES[
+      deliveryDateIndex === undefined
+        ? AVAILABLE_DELIVERY_DATES.length - 1
+        : deliveryDateIndex
+    ]
 
-  const taxPrice =  !shippingAddress ? undefined : round2(itemsPrice*0.15)
+  const shippingPrice =
+    !shippingAddress || !deliveryDate
+      ? undefined
+      : deliveryDate.freeShippingMinPrice > 0 &&
+          itemsPrice >= deliveryDate.freeShippingMinPrice
+        ? 0
+        : deliveryDate.shippingPrice
+
+  const taxPrice = !shippingAddress ? undefined : round2(itemsPrice * 0.15)
   const totalPrice = round2(
     itemsPrice +
       (shippingPrice ? round2(shippingPrice) : 0) +
@@ -158,7 +166,7 @@ export const calcDeliveryDateAndPrice = async ({
     AVAILABLE_DELIVERY_DATES,
     deliverDateIndex:
       deliveryDateIndex === undefined
-        ? AVAILABLE_DELIVERY_DATES.length-1
+        ? AVAILABLE_DELIVERY_DATES.length - 1
         : deliveryDateIndex,
     itemsPrice,
     shippingPrice,
@@ -166,5 +174,3 @@ export const calcDeliveryDateAndPrice = async ({
     totalPrice,
   }
 }
-
-

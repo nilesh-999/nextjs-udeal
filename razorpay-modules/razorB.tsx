@@ -26,10 +26,6 @@ const RazorpayButton: React.FC<RazorpayButtonProps> = ({
   createOrder,
   onApprove,
   razorpayKey,
-  name = 'John Doe',
-  email = 'john@example.com',
-  amount,
-  currency = 'INR',
 }) => {
   const loadScript = () =>
     new Promise<void>((resolve) => {
@@ -41,55 +37,55 @@ const RazorpayButton: React.FC<RazorpayButtonProps> = ({
     });
 
   const handlePayment = async () => {
-    await loadScript();
+    try {
+      await loadScript();
+      const orderData = await createOrder();
 
-    const orderData = await createOrder();
+      if (!orderData?.id) {
+        console.error('Failed to create order:', orderData);
+        alert('Failed to create order');
+        return;
+      }
 
-    if (!orderData?.id) {
-      alert('Failed to create order');
-      return;
+      const options = {
+        key: razorpayKey,
+        order_id: orderData.id,
+        handler: async function (response: any) {
+          console.log('Payment response:', response);
+          if (!response.razorpay_payment_id) {
+            alert('Payment failed: Missing payment ID');
+            return;
+          }
+          try {
+            await onApprove({ orderID: response.razorpay_payment_id });
+            alert('Payment successful!');
+          } catch (error) {
+            console.error('Payment approval failed:', error);
+            alert('Payment succeeded but approval failed');
+          }
+        },
+        prefill: {
+          name: 'Customer Name',
+          email: 'customer@example.com',
+        },
+        theme: {
+          color: '#F37254',
+        },
+      };
+
+      const paymentObject = new (window as any).Razorpay(options);
+      paymentObject.open();
+    } catch (error) {
+      console.error('Payment initialization failed:', error);
+      alert('Failed to initialize payment');
     }
-
-    const options = {
-      key: razorpayKey, // Replace with your Razorpay key
-      order_id: orderData.id,
-      name: 'Your Company',
-      description: 'Payment for order',
-      handler: async (response: RazorpayPaymentResponse) => {
-        if (!response.razorpay_payment_id) {
-    alert('Payment failed: Missing order ID');
-    return;
-  }
-  try {
-    await onApprove({ orderID: response.razorpay_payment_id });
-    alert('Payment successful and approved!');
-  } catch (error) {
-    alert('Payment succeeded but approval failed');
-    console.error(error);}
-        
-        // try {
-        //   // Call your backend to approve the payment
-        //   await onApprove({ orderID: response.razorpay_order_id });
-        //   alert('Payment successful and approved!');
-        // } catch (error) {
-        //   alert('Payment succeeded but approval failed');
-        //   console.error(error);
-        // }
-      },
-      prefill: {
-        name,
-        email,
-      },
-      theme: {
-        color: '#3399cc',
-      },
-    };
-
-    const rzp = new window.Razorpay(options);
-    rzp.open();
   };
 
-  return <button onClick={handlePayment}>Pay Now</button>;
+  return (
+    <button onClick={handlePayment} className="w-full">
+      Pay Now
+    </button>
+  );
 };
 
 export default RazorpayButton;

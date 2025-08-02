@@ -41,6 +41,8 @@ const RazorpayButton: React.FC<RazorpayButtonProps> = ({
       await loadScript();
       const orderData = await createOrder();
 
+      console.log('Using Razorpay key:', razorpayKey); // Add this log
+
       if (!orderData?.id) {
         console.error('Failed to create order:', orderData);
         alert('Failed to create order');
@@ -48,7 +50,7 @@ const RazorpayButton: React.FC<RazorpayButtonProps> = ({
       }
 
       const options = {
-        key: razorpayKey,
+        key: razorpayKey, // This should be your public key
         order_id: orderData.id,
         handler: async function (response: any) {
           console.log('Payment response:', response);

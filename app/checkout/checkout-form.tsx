@@ -775,7 +775,7 @@ const CheckoutForm = () => {
               <RazorpayButton
                 createOrder={handleCreateRazorPayOrder}
                 onApprove={handleApproveRazorPayOrder}
-                razorpayKey={process.env.RAZORPAY_API_KEY!}
+                razorpayKey={process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!}
               />
             </div>
           )}

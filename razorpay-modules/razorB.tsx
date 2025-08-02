@@ -61,7 +61,7 @@ const RazorpayButton: React.FC<RazorpayButtonProps> = ({
     return;
   }
   try {
-    await onApprove({ orderID: response.razorpay_order_id });
+    await onApprove({ orderID: response.razorpay_payment_id });
     alert('Payment successful and approved!');
   } catch (error) {
     alert('Payment succeeded but approval failed');

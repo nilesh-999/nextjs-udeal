@@ -99,7 +99,7 @@ export async function approveRazorPayOrder(
     const captureData = await razorpay.capturePayment(data.orderID, order.totalPrice)
     if (
       !captureData ||
-      captureData.id !== order.paymentResult?.id ||
+      //captureData.id !== order.paymentResult?.id ||
       captureData.status !== 'captured'
     )
       throw new Error('Error in razorpay payment')
@@ -108,7 +108,7 @@ export async function approveRazorPayOrder(
     order.paymentResult = {
       id: captureData.id,
       status: captureData.status,
-      email_address: captureData.payer.email ,//|| order.user.email,
+      email_address: captureData.user.email ,//|| order.user.email,
       pricePaid:
         (captureData.amount / 100). toString(), // Razorpay returns amount in paise
     }

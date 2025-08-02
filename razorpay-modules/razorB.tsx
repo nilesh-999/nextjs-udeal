@@ -14,7 +14,8 @@ type RazorpayPaymentResponse = {
 
 type RazorpayButtonProps = {
   createOrder: () => Promise<{ id: string }>; // backend order creation
-  onApprove: (data: { orderID: string }) => Promise<void>; // backend approval
+  onApprove: (data: { orderID: string }) => Promise<void>;
+  razorpayKey: string; // backend approval
   name?: string;
   email?: string;
   amount?: number;
@@ -24,6 +25,7 @@ type RazorpayButtonProps = {
 const RazorpayButton: React.FC<RazorpayButtonProps> = ({
   createOrder,
   onApprove,
+  razorpayKey,
   name = 'John Doe',
   email = 'john@example.com',
   amount,
@@ -49,7 +51,7 @@ const RazorpayButton: React.FC<RazorpayButtonProps> = ({
     }
 
     const options = {
-      key: 'rzp_test_XXwhHvyTyVw9F5', // Replace with your Razorpay key
+      key: razorpayKey, // Replace with your Razorpay key
       order_id: orderData.id,
       name: 'Your Company',
       description: 'Payment for order',

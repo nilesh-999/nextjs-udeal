@@ -125,6 +125,7 @@ export default function OrderDetailsForm({
                   <RazorpayButton
                     createOrder={handleCreateRazorPayOrder}
                     onApprove={handleApproveRazorPayOrder}
+                    razorpayKey={razorpayClientId}
                   />
                 </RazorpayScriptProvider>
               </div>

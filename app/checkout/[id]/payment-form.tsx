@@ -120,14 +120,15 @@ export default function OrderDetailsForm({
 
             {!isPaid && paymentMethod === 'RazorPay' && (
               <div>
-                <RazorpayScriptProvider >
-                  <RazorpayLoadingState />
-                  <RazorpayButton
-                    createOrder={handleCreateRazorPayOrder}
-                    onApprove={handleApproveRazorPayOrder}
-                    razorpayKey={razorpayClientId}
-                  />
-                </RazorpayScriptProvider>
+                {paymentMethod === 'RazorPay' && (
+            <div>
+              <RazorpayButton
+                createOrder={handleCreateRazorPayOrder}
+                onApprove={handleApproveRazorPayOrder}
+                razorpayKey={process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!}
+              />
+            </div>
+          )}
               </div>
             )}
             

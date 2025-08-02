@@ -770,7 +770,7 @@ const CheckoutForm = () => {
               </Card>
             </div>
           )}
-          {paymentMethod === 'RazorPay' && (
+          {/* {paymentMethod === 'RazorPay' && (
             <div>
               <RazorpayButton
                 createOrder={handleCreateRazorPayOrder}
@@ -778,7 +778,7 @@ const CheckoutForm = () => {
                 razorpayKey={process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!}
               />
             </div>
-          )}
+          )} */}
           <CheckoutFooter />
         </div>
         <div className='hidden md:block'>

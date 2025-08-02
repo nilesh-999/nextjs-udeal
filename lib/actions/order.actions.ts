@@ -96,11 +96,11 @@ export async function approveRazorPayOrder(
   try {
     const order = await Order.findById(orderId).populate('user', 'email')
     if (!order) throw new Error('Order not found')
-    const captureData = await razorpay.capturePayment(data.orderID)
+    const captureData = await razorpay.capturePayment(data.orderID, order.totalPrice)
     if (
       !captureData ||
       captureData.id !== order.paymentResult?.id ||
-      captureData.status !== 'COMPLETED'
+      captureData.status !== 'captured'
     )
       throw new Error('Error in razorpay payment')
     order.isPaid = true
@@ -108,9 +108,9 @@ export async function approveRazorPayOrder(
     order.paymentResult = {
       id: captureData.id,
       status: captureData.status,
-      email_address: captureData.payer.email_address,
+      email_address: captureData.payer.email ,//|| order.user.email,
       pricePaid:
-        captureData.purchase_units[0]?.payments?.captures[0]?.amount?.value,
+        (captureData.amount / 100). toString(), // Razorpay returns amount in paise
     }
     await order.save()
     await sendPurchaseReceipt({ order })

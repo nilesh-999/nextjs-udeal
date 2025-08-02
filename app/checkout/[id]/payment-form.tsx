@@ -78,7 +78,10 @@ export default function OrderDetailsForm({
       })
 
       if (res.success) {
-        // Add small delay to ensure toast is shown
+        // Force reload the page to show updated payment status
+        router.refresh()
+
+        // Then redirect after a small delay
         setTimeout(() => {
           router.push(`/account/orders/${order._id}`)
         }, 1000)

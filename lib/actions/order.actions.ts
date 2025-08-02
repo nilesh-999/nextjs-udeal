@@ -94,13 +94,13 @@ export async function approveRazorPayOrder(
 ) {
   await connectToDatabase()
   try {
-    const order = await Order.findById(orderId).populate('user', [
-      'email',
-      'name',
-    ])
+    // Populate user with email and name fields
+    const order = await Order.findById(orderId).populate<{
+      user: { email: string; name: string }
+    }>('user', 'name email')
+
     if (!order) throw new Error('Order not found')
 
-    // Check if order is already paid
     if (order.isPaid) {
       return {
         success: true,
@@ -126,27 +126,37 @@ export async function approveRazorPayOrder(
     order.paymentResult = {
       id: captureData.id,
       status: captureData.status,
-      // Fix the type checking here
-      email_address:
-        typeof order.user === 'string' ? order.user : order.user.email,
+      email_address: order.user.email,
       pricePaid: (captureData.amount / 100).toString(),
     }
 
+    // Save order first
     await order.save()
 
-    try {
-      console.log(
-        'Attempting to send email to:',
-        typeof order.user === 'string' ? order.user : order.user.email
-      )
-      await sendPurchaseReceipt({ order })
-      console.log('Email sent successfully')
-    } catch (emailError) {
-      console.error('Failed to send email:', emailError)
+    // Update product stock for production environment
+    // if (!process.env.MONGODB_URI?.startsWith('mongodb://localhost')) {
+    //   await updateProductStock(order._id)
+    // }
+
+    // Send email only if we have user email
+    if (order.user.email) {
+      try {
+        await sendPurchaseReceipt({ order })
+        console.log('Purchase receipt email sent successfully')
+      } catch (emailError) {
+        console.error('Failed to send purchase receipt email:', emailError)
+        // Don't throw error here - payment is still successful
+      }
     }
 
+    // Revalidate the page
     revalidatePath(`/account/orders/${orderId}`)
-    return { success: true, message: 'Payment successful' }
+
+    return {
+      success: true,
+      message: 'Payment successful',
+      orderId: order._id.toString(),
+    }
   } catch (err: any) {
     console.error('Payment approval error:', err)
     if (err.message?.includes('already been captured')) {

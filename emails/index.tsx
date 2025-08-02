@@ -11,10 +11,11 @@ export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
       ? order.user
       : order.user.email;
 
-    console.log('Sending email with details:', {
+    console.log('Preparing to send email:', {
       from: `${SENDER_NAME} <${SENDER_EMAIL}>`,
       to: userEmail,
-      subject: 'Order Confirmation'
+      subject: 'Order Confirmation',
+      order: order._id
     });
 
     const response = await resend.emails.send({
@@ -24,7 +25,7 @@ export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
       react: <PurchaseReceiptEmail order={order} />,
     });
 
-    console.log('Email sent response:', response);
+    console.log('Email sent successfully:', response);
     return response;
   } catch (error) {
     console.error('Error sending email:', error);

@@ -25,7 +25,7 @@ export default function OrderDetailsForm({
   order: IOrder
   razorpayClientId: string
   isAdmin: boolean
-  
+
 }) {
   const router = useRouter()
   const {
@@ -42,17 +42,19 @@ export default function OrderDetailsForm({
   const { toast } = useToast()
 
   if (isPaid) {
+    console.log('Order is already paid, redirecting...')
     redirect(`/account/orders/${order._id}`)
+
   }
   // function RazorpayLoadingState() {
   //   const { isLoaded, isLoading, error, loadScript } = useRazorpayScriptReducer()
   //   let status = ''
   //   if (isLoaded) {
   //     status = 'RazorPay is loaded.'
-      
+
   //   } else if (isLoading) {
   //     status = 'RazorPay is loading...'
-      
+
   //   }
   //   else if (error) {
   //     status = `RazorPay failed to load`
@@ -64,15 +66,30 @@ export default function OrderDetailsForm({
       return toast({
         description: res.message,
         variant: 'destructive',
-      })  
-    return {id:res.data}
+      })
+    return { id: res.data }
   }
   const handleApproveRazorPayOrder = async (data: { orderID: string }) => {
-    const res = await approveRazorPayOrder(order._id, data)
-    toast({
-      description: res.message,
-      variant: res.success ? 'default' : 'destructive',
-    })
+    try {
+      const res = await approveRazorPayOrder(order._id, data)
+      toast({
+        description: res.message,
+        variant: res.success ? 'default' : 'destructive',
+      })
+
+      if (res.success) {
+        // Add small delay to ensure toast is shown
+        setTimeout(() => {
+          router.push(`/account/orders/${order._id}`)
+        }, 1000)
+      }
+    } catch (error) {
+      console.error('Payment approval error:', error)
+      toast({
+        description: 'Error processing payment',
+        variant: 'destructive',
+      })
+    }
   }
 
   const CheckoutSummary = () => (
@@ -121,17 +138,18 @@ export default function OrderDetailsForm({
             {!isPaid && paymentMethod === 'RazorPay' && (
               <div>
                 {paymentMethod === 'RazorPay' && (
-            <div>
-              <RazorpayButton
-                createOrder={handleCreateRazorPayOrder}
-                onApprove={handleApproveRazorPayOrder}
-                razorpayKey={process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!}
-              />
-            </div>
-          )}
+                  <div>
+                    <RazorpayButton
+                      createOrder={handleCreateRazorPayOrder}
+                      onApprove={handleApproveRazorPayOrder}
+                      razorpayKey={process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!}
+
+                    />
+                  </div>
+                )}
               </div>
             )}
-            
+
 
             {!isPaid && paymentMethod === 'Cash On Delivery' && (
               <Button

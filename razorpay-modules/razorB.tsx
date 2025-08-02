@@ -50,9 +50,9 @@ const RazorpayButton: React.FC<RazorpayButtonProps> = ({
       }
 
       const options = {
-        key: razorpayKey, // This should be your public key
+        key: razorpayKey,
         order_id: orderData.id,
-        handler: async function (response: any) {
+        handler: async function (response: RazorpayPaymentResponse) {
           console.log('Payment response:', response);
           if (!response.razorpay_payment_id) {
             alert('Payment failed: Missing payment ID');
@@ -60,10 +60,15 @@ const RazorpayButton: React.FC<RazorpayButtonProps> = ({
           }
           try {
             await onApprove({ orderID: response.razorpay_payment_id });
-            alert('Payment successful!');
+            // Remove the alert here since we're handling success in the parent
           } catch (error) {
             console.error('Payment approval failed:', error);
             alert('Payment succeeded but approval failed');
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            console.log('Payment modal closed');
           }
         },
         prefill: {

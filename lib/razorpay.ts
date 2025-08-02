@@ -2,8 +2,8 @@ const base = process.env.RAZORPAY_API_URL || "https://api.razorpay.com/v1"
 
 export const razorpay = {
     createOrder: async function createOrder(price: number) {
-  const { RAZORPAY_CLIENT_ID, RAZORPAY_APP_SECRET } = process.env
-  const auth = Buffer.from(RAZORPAY_CLIENT_ID + ':' + RAZORPAY_APP_SECRET).toString('base64')
+  const { RAZORPAY_API_KEY, RAZORPAY_APP_SECRET } = process.env
+  const auth = Buffer.from(RAZORPAY_API_KEY + ':' + RAZORPAY_APP_SECRET).toString('base64')
   const url = `${base}/orders`
   const response = await fetch(url, {
     method: 'post',
@@ -21,8 +21,8 @@ export const razorpay = {
   return handleResponse(response)
     },
     capturePayment: async function capturePayment(paymentId: string, amount: number) {
-  const { RAZORPAY_CLIENT_ID, RAZORPAY_APP_SECRET } = process.env
-  const auth = Buffer.from(RAZORPAY_CLIENT_ID + ':' + RAZORPAY_APP_SECRET).toString('base64')
+  const { RAZORPAY_API_KEY, RAZORPAY_APP_SECRET } = process.env
+  const auth = Buffer.from(RAZORPAY_API_KEY + ':' + RAZORPAY_APP_SECRET).toString('base64')
   const url = `${base}/payments/${paymentId}/capture`
   const response = await fetch(url, {
     method: 'post',

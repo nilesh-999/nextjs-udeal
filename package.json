@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@react-email/preview-server": "^4.2.5",
+    "@react-email/preview-server": "^4.2.7",
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/react": "^19",

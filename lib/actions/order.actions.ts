@@ -94,79 +94,84 @@ export async function approveRazorPayOrder(
 ) {
   await connectToDatabase()
   try {
-    // Populate user with email and name fields
     const order = await Order.findById(orderId).populate<{
       user: { email: string; name: string }
     }>('user', 'name email')
 
     if (!order) throw new Error('Order not found')
 
+    // Check if order is already paid
     if (order.isPaid) {
       return {
         success: true,
         message: 'Order is already paid',
         alreadyPaid: true,
+        orderId: order._id.toString(),
       }
     }
 
     console.log('Attempting to capture payment:', data.orderID)
-    const captureData = await razorpay.capturePayment(
-      data.orderID,
-      order.totalPrice
-    )
+    try {
+      const captureData = await razorpay.capturePayment(
+        data.orderID,
+        order.totalPrice
+      )
 
-    if (!captureData || captureData.status !== 'captured') {
-      console.error('Payment capture failed:', captureData)
-      throw new Error('Error in razorpay payment')
-    }
+      // Update order status
+      order.isPaid = true
+      order.paidAt = new Date()
+      order.paymentResult = {
+        id: captureData.id,
+        status: captureData.status,
+        email_address:
+          typeof order.user === 'string' ? order.user : order.user.email,
+        pricePaid: (captureData.amount / 100).toString(),
+      }
 
-    // Update order status
-    order.isPaid = true
-    order.paidAt = new Date()
-    order.paymentResult = {
-      id: captureData.id,
-      status: captureData.status,
-      email_address: order.user.email,
-      pricePaid: (captureData.amount / 100).toString(),
-    }
+      // Save order first
+      await order.save()
 
-    // Save order first
-    await order.save()
-
-    // Update product stock for production environment
-    // if (!process.env.MONGODB_URI?.startsWith('mongodb://localhost')) {
-    //   await updateProductStock(order._id)
-    // }
-
-    // Send email only if we have user email
-    if (order.user.email) {
+      // Send email
       try {
         await sendPurchaseReceipt({ order })
         console.log('Purchase receipt email sent successfully')
       } catch (emailError) {
-        console.error('Failed to send purchase receipt email:', emailError)
-        // Don't throw error here - payment is still successful
+        console.error('Failed to send email:', emailError)
       }
-    }
 
-    // Revalidate the page
-    revalidatePath(`/account/orders/${orderId}`)
+      // Force revalidate the page
+      revalidatePath(`/account/orders/${orderId}`)
 
-    return {
-      success: true,
-      message: 'Payment successful',
-      orderId: order._id.toString(),
+      return {
+        success: true,
+        message: 'Payment successful',
+        orderId: order._id.toString(),
+      }
+    } catch (captureError: any) {
+      // Handle already captured payment
+      if (captureError.message?.includes('already been captured')) {
+        // Update order as paid if payment was actually captured
+        order.isPaid = true
+        order.paidAt = new Date()
+        await order.save()
+
+        revalidatePath(`/account/orders/${orderId}`)
+
+        return {
+          success: true,
+          message: 'Payment was already processed',
+          orderId: order._id.toString(),
+        }
+      }
+      throw captureError
     }
   } catch (err: any) {
     console.error('Payment approval error:', err)
-    if (err.message?.includes('already been captured')) {
-      return {
-        success: true,
-        message: 'Payment was already processed',
-        alreadyPaid: true,
-      }
+    return {
+      success: false,
+      message: formatError(err),
+      orderId: orderId,
     }
-    return { success: false, message: formatError(err) }
   }
 }
 

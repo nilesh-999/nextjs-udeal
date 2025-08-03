@@ -17,6 +17,7 @@ import { redirect, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import ProductPrice from '@/components/shared/product/product-price'
 import RazorpayLoadingState from '@/razorpay-modules/razorL'
+import { sendPurchaseReceipt } from '@/emails'
 
 export default function OrderDetailsForm({
   order,
@@ -42,6 +43,7 @@ export default function OrderDetailsForm({
   const { toast } = useToast()
 
   if (isPaid) {
+    
     console.log('Order is already paid, redirecting...')
     redirect(`/account/orders/${order._id}`)
 
@@ -76,7 +78,7 @@ export default function OrderDetailsForm({
         description: res.message,
         variant: res.success ? 'default' : 'destructive',
       })
-
+      await sendPurchaseReceipt({ order })
       if (res.success) {
         // Force reload the page to show updated payment status
         router.refresh()

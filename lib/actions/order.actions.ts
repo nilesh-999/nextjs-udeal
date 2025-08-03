@@ -94,23 +94,9 @@ export async function approveRazorPayOrder(
 ) {
   await connectToDatabase()
   try {
-    const order = await Order.findById(orderId).populate<{
-      user: { email: string; name: string }
-    }>('user', 'name email')
+    const order = await Order.findById(orderId).populate('user', 'email')
 
     if (!order) throw new Error('Order not found')
-
-    // Check if order is already paid
-    if (order.isPaid) {
-      return {
-        success: true,
-        message: 'Order is already paid',
-        alreadyPaid: true,
-        orderId: order._id.toString(),
-      }
-    }
-
-    console.log('Attempting to capture payment:', data.orderID)
     try {
       const captureData = await razorpay.capturePayment(
         data.orderID,
@@ -126,21 +112,35 @@ export async function approveRazorPayOrder(
         email_address:
           typeof order.user === 'string' ? order.user : order.user.email,
         pricePaid: (captureData.amount / 100).toString(),
+      }  
+    try {
+        await sendPurchaseReceipt({ order })
+        console.log('Purchase receipt email sent successfully')
+      } catch (emailError) {
+        console.error('Failed to send email:', emailError)
+      }  
+    revalidatePath(`/account/orders/${orderId}`)
+    // Check if order is already paid
+    if (order.isPaid) {
+      return {
+        success: true,
+        message: 'Order is already paid',
+        alreadyPaid: true,
+        orderId: order._id.toString(),
       }
+    }
+
+    console.log('Attempting to capture payment:', data.orderID)
+    
 
       // Save order first
       await order.save()
 
       // Send email
-      try {
-        await sendPurchaseReceipt({ order })
-        console.log('Purchase receipt email sent successfully')
-      } catch (emailError) {
-        console.error('Failed to send email:', emailError)
-      }
+     
 
       // Force revalidate the page
-      revalidatePath(`/account/orders/${orderId}`)
+      
 
       return {
         success: true,

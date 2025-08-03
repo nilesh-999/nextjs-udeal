@@ -9,7 +9,7 @@ if (!process.env.NEXT_PUBLIC_RESEND_API_KEY) {
 }
 console.log('Using Resend API Key:', process.env.NEXT_PUBLIC_RESEND_API_KEY);
 
-const resend = new Resend(process.env.RESEND_API_KEY as string);
+const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY as string);
 
 export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
   await resend.emails.send({

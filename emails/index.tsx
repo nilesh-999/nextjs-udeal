@@ -7,7 +7,7 @@ import { SENDER_EMAIL, SENDER_NAME } from '@/lib/constants'
   //throw new Error('RESEND_API_KEY is not defined in environment variables');
 //}
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend("re_W16AUAmN_3tYPds5KuKz9KUwwpFRNB4PQ");
 
 export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
   try {

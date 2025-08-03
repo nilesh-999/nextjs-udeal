@@ -12,7 +12,7 @@ const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY);
 
 export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
   try {
-
+    console.log(order);
     const userEmail = typeof order.user === 'string'
       ? order.user
       : order.user.email;

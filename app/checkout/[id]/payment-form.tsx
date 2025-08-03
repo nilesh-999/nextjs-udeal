@@ -78,7 +78,24 @@ export default function OrderDetailsForm({
         description: res.message,
         variant: res.success ? 'default' : 'destructive',
       })
-      await sendPurchaseReceipt({ order })
+      
+      // Send email notification through API route
+      try {
+        const emailResponse = await fetch('/api/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ orderId: order._id }),
+        });
+        
+        if (!emailResponse.ok) {
+          console.warn('Email notification could not be sent');
+        }
+      } catch (emailError) {
+        console.error('Error sending email notification:', emailError);
+      }
+      
       if (res.success) {
         // Force reload the page to show updated payment status
         router.refresh()

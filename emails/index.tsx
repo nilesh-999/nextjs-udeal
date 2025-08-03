@@ -14,6 +14,7 @@ const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY as string);
 
 export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
   //console.log('Sending purchase receipt for order:', (User.findById(order.user)));
+  console.log('Sending purchase receipt for order:', order._id,`${SENDER_NAME} <${SENDER_EMAIL}>`);
   await resend.emails.send({
     from: `${SENDER_NAME} <${SENDER_EMAIL}>`,
     to: 'nilesh.23a@gmail.com',

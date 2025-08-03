@@ -12,10 +12,11 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
   try {
+
     const userEmail = typeof order.user === 'string'
       ? order.user
       : order.user.email;
-
+    console.log('User email:', userEmail);
     console.log('Attempting to send email with details:', {
       from: `${SENDER_NAME} <${SENDER_EMAIL}>`,
       to: userEmail,

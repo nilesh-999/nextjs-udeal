@@ -3,9 +3,9 @@ import PurchaseReceiptEmail from './purchase-receipt'
 import { IOrder } from '@/lib/db/model.order.model'
 import { SENDER_EMAIL, SENDER_NAME } from '@/lib/constants'
 
-//if (!process.env.RESEND_API_KEY) {
-  //throw new Error('RESEND_API_KEY is not defined in environment variables');
-//}
+if (!process.env.RESEND_API_KEY) {
+  throw new Error('RESEND_API_KEY is not defined in environment variables');
+}
 console.log('Using Resend API Key:', process.env.RESEND_API_KEY);
 
 const resend = new Resend(process.env.RESEND_API_KEY);

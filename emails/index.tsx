@@ -13,6 +13,8 @@ const resend = new Resend(process.env.NEXT_PUBLIC_RESEND_API_KEY);
 export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
   try {
     console.log(order);
+  //   const user = await User.findById(order.user);
+  // const userEmail = user.email;
     const userEmail = typeof order.user === 'string'
       ? order.user
       : order.user.email;
@@ -25,7 +27,7 @@ export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
 
     const response = await resend.emails.send({
       from: `${SENDER_NAME} <${SENDER_EMAIL}>`,
-      to: userEmail,
+      to: (order.user as { email: string }).email,
       subject: 'Order Confirmation',
       react: <PurchaseReceiptEmail order={order} />,
     });

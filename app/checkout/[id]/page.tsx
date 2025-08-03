@@ -29,7 +29,7 @@ const CheckoutPaymentPage = async (props: {
   return (
     <PaymentForm
       order={order}
-      razorpayClientId={process.env.RAZORPAY_CLIENT_ID || 'sb'}
+      //razorpayClientId={process.env.RAZORPAY_CLIENT_ID || 'sb'}
       isAdmin={session?.user?.role === 'Admin' || false}
     />
   )

@@ -21,10 +21,10 @@ import { sendPurchaseReceipt } from '@/emails'
 
 export default function OrderDetailsForm({
   order,
-  razorpayClientId,
+  //razorpayClientId,
 }: {
   order: IOrder
-  razorpayClientId: string
+  //razorpayClientId: string
   isAdmin: boolean
 
 }) {
@@ -144,7 +144,7 @@ export default function OrderDetailsForm({
               <div>
                 {paymentMethod === 'RazorPay' && (
                   <div>
-                    
+
                     <RazorpayButton
                       createOrder={handleCreateRazorPayOrder}
                       onApprove={handleApproveRazorPayOrder}

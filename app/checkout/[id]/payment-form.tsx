@@ -9,7 +9,7 @@ import {
   approveRazorPayOrder,
   createRazorPayOrder,
 } from '@/lib/actions/order.actions'
-import { IOrder } from '@/lib/db/model.order.model'
+import { IOrder } from '@/lib/db/models/order.model'
 import { formatDateTime } from '@/lib/utils'
 
 import CheckoutFooter from '../checkout-footer'
@@ -43,7 +43,7 @@ export default function OrderDetailsForm({
   const { toast } = useToast()
 
   if (isPaid) {
-    
+
     console.log('Order is already paid, redirecting...')
     redirect(`/account/orders/${order._id}`)
 

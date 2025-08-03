@@ -14,8 +14,8 @@ import {
 } from '@react-email/components'
 
 import { formatCurrency } from '@/lib/utils'
-import { IOrder } from '@/lib/db/model.order.model'
-import {SERVER_URL} from '@/lib/constants'
+import { IOrder } from '@/lib/db/models/order.model'
+import { SERVER_URL } from '@/lib/constants'
 
 type OrderInformationProps = {
   order: IOrder
@@ -66,7 +66,7 @@ const dateFormatter = new Intl.DateTimeFormat('en', { dateStyle: 'medium' })
 export default async function PurchaseReceiptEmail({
   order,
 }: OrderInformationProps) {
-  
+
   return (
     <Html>
       <Preview>View order receipt</Preview>
@@ -105,25 +105,25 @@ export default async function PurchaseReceiptEmail({
               {order.items.map((item) => (
                 <Row key={item.product} className='mt-8'>
                   <Column className='w-20'>
-                    
-                      <Img
-                        width='80'
-                        alt={item.name}
-                        className='rounded'
-                        src={
-                          item.image.startsWith('/')
-                            ? `${SERVER_URL}${item.image}`
-                            : item.image
-                        }
-                      />
-                   
+
+                    <Img
+                      width='80'
+                      alt={item.name}
+                      className='rounded'
+                      src={
+                        item.image.startsWith('/')
+                          ? `${SERVER_URL}${item.image}`
+                          : item.image
+                      }
+                    />
+
                   </Column>
                   <Column className='align-top'>
-                    
-                      <Text className='mx-2 my-0'>
-                        {item.name} x {item.quantity}
-                      </Text>
-                    
+
+                    <Text className='mx-2 my-0'>
+                      {item.name} x {item.quantity}
+                    </Text>
+
                   </Column>
                   <Column align='right' className='align-top'>
                     <Text className='m-0 '>{formatCurrency(item.price)}</Text>

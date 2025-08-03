@@ -6,7 +6,7 @@ import { AVAILABLE_DELIVERY_DATES } from '../constants'
 import { connectToDatabase } from '../db'
 import { auth } from '@/auth'
 import { OrderInputSchema } from '../validator'
-import Order, { IOrder } from '../db/model.order.model'
+import Order, { IOrder } from '../db/models/order.model'
 import { razorpay } from '../razorpay'
 import { sendPurchaseReceipt } from '@/emails'
 import { revalidatePath } from 'next/cache'
@@ -112,37 +112,34 @@ export async function approveRazorPayOrder(
         email_address:
           typeof order.user === 'string' ? order.user : order.user.email,
         pricePaid: (captureData.amount / 100).toString(),
-      }  
-    // try {
-    //     await sendPurchaseReceipt({ order })
-    //     console.log('Purchase receipt email sent successfully')
-    //   } catch (emailError) {
-    //     console.error('Failed to send email:', emailError)
-    //   }  
-    revalidatePath(`/account/orders/${orderId}`)
-    // Check if order is already paid
-    if (order.isPaid) {
-      await sendPurchaseReceipt({ order })
-        console.log('Purchase receipt email sent successfully')
-      return {
-        success: true,
-        message: 'Order is already paid',
-        alreadyPaid: true,
-        orderId: order._id.toString(),
       }
-    }
+      // try {
+      //     await sendPurchaseReceipt({ order })
+      //     console.log('Purchase receipt email sent successfully')
+      //   } catch (emailError) {
+      //     console.error('Failed to send email:', emailError)
+      //   }
+      revalidatePath(`/account/orders/${orderId}`)
+      // Check if order is already paid
+      if (order.isPaid) {
+        await sendPurchaseReceipt({ order })
+        console.log('Purchase receipt email sent successfully')
+        return {
+          success: true,
+          message: 'Order is already paid',
+          alreadyPaid: true,
+          orderId: order._id.toString(),
+        }
+      }
 
-    console.log('Attempting to capture payment:', data.orderID)
-    
+      console.log('Attempting to capture payment:', data.orderID)
 
       // Save order first
       await order.save()
 
       // Send email
-     
 
       // Force revalidate the page
-      
 
       return {
         success: true,

@@ -13,14 +13,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { IOrder } from '@/lib/db/model.order.model'
+import { IOrder } from '@/lib/db/models/order.model'
 import { cn, formatDateTime } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 import ProductPrice from '../product/product-price'
 
 export default function OrderDetailsForm({
   order,
- 
+
 }: {
   order: IOrder
   isAdmin: boolean
@@ -163,7 +163,7 @@ export default function OrderDetailsForm({
               </Link>
             )}
 
-            
+
           </CardContent>
         </Card>
       </div>

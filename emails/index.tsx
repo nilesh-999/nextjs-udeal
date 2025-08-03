@@ -1,6 +1,6 @@
 import { Resend } from 'resend'
 import PurchaseReceiptEmail from './purchase-receipt'
-import { IOrder } from '@/lib/db/model.order.model'
+import { IOrder } from '@/lib/db/models/order.model'
 import { SENDER_EMAIL, SENDER_NAME } from '@/lib/constants'
 import User from '@/lib/db/models/user.model';
 

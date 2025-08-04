@@ -30,7 +30,7 @@ export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
       if (order.user) {
         if (typeof order.user === 'object' && 'email' in order.user) {
           // User is populated, use the email from the user object
-          userEmail = "nilesh.23a@gmail.com"//(order.user as IUser).email;
+          userEmail = (order.user as IUser).email;
           console.log('User email:', userEmail)
         } else if (typeof order.user === 'string') {
           // User is not populated, log a warning

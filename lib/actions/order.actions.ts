@@ -113,12 +113,12 @@ export async function approveRazorPayOrder(
           typeof order.user === 'string' ? order.user : order.user.email,
         pricePaid: (captureData.amount / 100).toString(),
       }
-      // try {
-      //     await sendPurchaseReceipt({ order })
-      //     console.log('Purchase receipt email sent successfully')
-      //   } catch (emailError) {
-      //     console.error('Failed to send email:', emailError)
-      //   }
+      try {
+          await sendPurchaseReceipt({ order })
+          console.log('Purchase receipt email sent successfully')
+        } catch (emailError) {
+          console.error('Failed to send email:', emailError)
+        }
       revalidatePath(`/account/orders/${orderId}`)
       // Check if order is already paid
       if (order.isPaid) {

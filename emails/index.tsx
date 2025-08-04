@@ -5,12 +5,10 @@ import { SENDER_EMAIL, SENDER_NAME } from '@/lib/constants'
 import { IUser } from '@/lib/db/models/user.model'
 
 // Check for API key in server-side environment variables
-if (!process.env.RESEND_API_KEY) {
-  console.warn('RESEND_API_KEY is not defined in environment variables');
-}
+
 
 // Initialize Resend with the API key from environment variables
-const resend = new Resend(process.env.RESEND_API_KEY || '');
+const resend = new Resend(process.env.RESEND_API_KEY as string);
 
 
 /**

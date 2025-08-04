@@ -24,10 +24,10 @@ export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
     // Use the Resend instance to send email (server-side only)
     //minor-if (typeof window === 'undefined') {
       // Get the user email from the populated user field
-      let userEmail = 'nilesh.23a@gmail.com'; // Default fallback email
+      let userEmail = 'l'; // Default fallback email
       
       // Check if user field is populated and has email property
-      if (order.user) {
+      
         if (typeof order.user === 'object' && 'email' in order.user) {
           // User is populated, use the email from the user object
           userEmail = (order.user as IUser).email;
@@ -36,9 +36,7 @@ export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
           // User is not populated, log a warning
           console.warn('User field is not populated. Using fallback email.');
         }
-      } else {
-        console.warn('Order has no user field. Using fallback email.');
-      }
+      
       
       console.log('Sending email to:', userEmail);
       

@@ -22,7 +22,7 @@ export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
     console.log('Sending purchase receipt for order:', order._id, `${SENDER_NAME} <${SENDER_EMAIL}>`);
     
     // Use the Resend instance to send email (server-side only)
-    if (typeof window === 'undefined') {
+    //minor-if (typeof window === 'undefined') {
       // Get the user email from the populated user field
       let userEmail = 'nilesh.23a@gmail.com'; // Default fallback email
       
@@ -49,22 +49,22 @@ export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
         react: <PurchaseReceiptEmail order={order} />,
       });
       console.log('Email sent successfully');
-    } else {
-      // If running on client-side, call the API route instead
-      // const response = await fetch('/api/send-email', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({ orderId: order._id }),
-      // });
+    // } else {
+    //   // If running on client-side, call the API route instead
+    //   // const response = await fetch('/api/send-email', {
+    //   //   method: 'POST',
+    //   //   headers: {
+    //   //     'Content-Type': 'application/json',
+    //   //   },
+    //   //   body: JSON.stringify({ orderId: order._id }),
+    //   // });
       
-      // if (!response.ok) {
-      //   throw new Error('Failed to send email through API route');
-      // }
+    //   // if (!response.ok) {
+    //   //   throw new Error('Failed to send email through API route');
+    //   // }
       
-      console.log('LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
-    }
+    //   console.log('LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
+    // }
   } catch (error) {
     console.error('Error sending email:', error);
     throw error; // Re-throw the error to be handled by the caller

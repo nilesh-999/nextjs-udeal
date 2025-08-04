@@ -43,9 +43,10 @@ export default function OrderDetailsForm({
   const { toast } = useToast()
 
   if (isPaid) {
-
+    sendPurchaseReceipt({order})
     console.log('Order is already paid, redirecting...')
     redirect(`/account/orders/${order._id}`)
+    
 
   }
   // function RazorpayLoadingState() {

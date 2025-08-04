@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { sendPurchaseReceipt } from '@/emails';
 import { connectToDatabase } from '@/lib/db';
-import Order from '@/lib/db/models/order.model';
+import Order, { IOrder } from '@/lib/db/models/order.model';
 
 type ResponseData = {
   success?: boolean;
@@ -96,7 +96,9 @@ export default async function handler(
     }
     
     // Send the email
-    await sendPurchaseReceipt({ order });
+    // TypeScript is complaining because order could be null, but we've already handled that case above
+    // We can safely assert that order is not null at this point
+    await sendPurchaseReceipt({ order: order as IOrder });
     
     return res.status(200).json({
       success: true,

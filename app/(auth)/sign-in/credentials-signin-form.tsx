@@ -35,7 +35,7 @@ const signInDefaultValues =
 
 export default function CredentialsSignInForm() {
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/'
+    const callbackUrl = searchParams?.get('callbackUrl') || '/'
 
   const form = useForm<IUserSignIn>({
     resolver: zodResolver(UserSignInSchema),

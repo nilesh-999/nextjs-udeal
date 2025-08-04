@@ -14,7 +14,7 @@ function useCartSidebar() {
   const currentPath = usePathname()
 
   return Boolean(
-    items.length > 0 && deviceType === 'desktop' && isNotInPaths(currentPath)
+    //items.length > 0 && deviceType === 'desktop' && isNotInPaths(currentPath)
   )
 }
 

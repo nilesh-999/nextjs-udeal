@@ -2,7 +2,7 @@ import { Resend } from 'resend'
 import PurchaseReceiptEmail from './purchase-receipt'
 import { IOrder } from '@/lib/db/models/order.model'
 import { SENDER_EMAIL, SENDER_NAME } from '@/lib/constants'
-//import User from '@/lib/db/models/user.model';
+import { IUser } from '@/lib/db/models/user.model'
 
 // Check for API key in server-side environment variables
 if (!process.env.RESEND_API_KEY) {
@@ -13,15 +13,37 @@ if (!process.env.RESEND_API_KEY) {
 const resend = new Resend(process.env.RESEND_API_KEY || '');
 
 
+/**
+ * Sends a purchase receipt email to the user
+ * @param order - The order object with populated user field
+ */
 export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
   try {
     console.log('Sending purchase receipt for order:', order._id, `${SENDER_NAME} <${SENDER_EMAIL}>`);
     
     // Use the Resend instance to send email (server-side only)
     if (typeof window === 'undefined') {
+      // Get the user email from the populated user field
+      let userEmail = 'nilesh.23a@gmail.com'; // Default fallback email
+      
+      // Check if user field is populated and has email property
+      if (order.user) {
+        if (typeof order.user === 'object' && 'email' in order.user) {
+          // User is populated, use the email from the user object
+          userEmail = (order.user as IUser).email;
+        } else if (typeof order.user === 'string') {
+          // User is not populated, log a warning
+          console.warn('User field is not populated. Using fallback email.');
+        }
+      } else {
+        console.warn('Order has no user field. Using fallback email.');
+      }
+      
+      console.log('Sending email to:', userEmail);
+      
       await resend.emails.send({
         from: `${SENDER_NAME} <${SENDER_EMAIL}>`,
-        to: 'nilesh.23a@gmail.com', // Replace with order.user.email when available
+        to: userEmail,
         subject: 'Order Confirmation',
         react: <PurchaseReceiptEmail order={order} />,
       });
@@ -44,6 +66,7 @@ export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
     }
   } catch (error) {
     console.error('Error sending email:', error);
+    throw error; // Re-throw the error to be handled by the caller
   }
 }
 

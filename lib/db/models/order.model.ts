@@ -1,10 +1,12 @@
 import { IOrderInput } from '@/types'
 import { Document, Model, model, models, Schema } from 'mongoose'
+import { IUser } from './user.model'
 
 export interface IOrder extends Document, IOrderInput {
   _id: string
   createdAt: Date
   updatedAt: Date
+  user: IUser | string
 }
 
 const orderSchema = new Schema<IOrder>(

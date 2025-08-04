@@ -31,6 +31,7 @@ export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
         if (typeof order.user === 'object' && 'email' in order.user) {
           // User is populated, use the email from the user object
           userEmail = (order.user as IUser).email;
+          console.log('User email:', userEmail)
         } else if (typeof order.user === 'string') {
           // User is not populated, log a warning
           console.warn('User field is not populated. Using fallback email.');

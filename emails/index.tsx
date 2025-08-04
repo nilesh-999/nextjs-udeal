@@ -51,19 +51,19 @@ export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
       console.log('Email sent successfully');
     } else {
       // If running on client-side, call the API route instead
-      const response = await fetch('/api/send-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ orderId: order._id }),
-      });
+      // const response = await fetch('/api/send-email', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ orderId: order._id }),
+      // });
       
-      if (!response.ok) {
-        throw new Error('Failed to send email through API route');
-      }
+      // if (!response.ok) {
+      //   throw new Error('Failed to send email through API route');
+      // }
       
-      console.log('Email request sent through API route');
+      console.log('LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL');
     }
   } catch (error) {
     console.error('Error sending email:', error);

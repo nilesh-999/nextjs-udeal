@@ -18,6 +18,9 @@ const resend = new Resend(process.env.RESEND_API_KEY as string);
 export const sendPurchaseReceipt = async ({ order }: { order: IOrder }) => {
   try {
     console.log('Sending purchase receipt for order:', order._id, `${SENDER_NAME} <${SENDER_EMAIL}>`);
+    console.log('RESEND_API_KEY:', process.env.RESEND_API_KEY ? 'Set' : 'Not Set');
+    console.log('SENDER_EMAIL:', SENDER_EMAIL);
+    console.log('SENDER_NAME:', SENDER_NAME);
     
     // Use the Resend instance to send email (server-side only)
     //minor-if (typeof window === 'undefined') {

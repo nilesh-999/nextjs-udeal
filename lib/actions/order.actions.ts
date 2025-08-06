@@ -149,7 +149,11 @@ export async function approveRazorPayOrder(
       if (captureError.message?.includes('already been captured')) {
         // Update order as paid if payment was actually captured
         await order.save()
-        await sendPurchaseReceipt({ order })
+        try{
+ await sendPurchaseReceipt({ order })
+        }catch (emailError) {
+          console.error('Failed to send purchase receipt email:', emailError)}
+       
         order.isPaid = true
         order.paidAt = new Date()
         await order.save()

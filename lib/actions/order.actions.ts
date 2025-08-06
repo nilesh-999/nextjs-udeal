@@ -116,7 +116,7 @@ export async function approveRazorPayOrder(
       await order.save()
         await sendPurchaseReceipt({ order })
         console.log('Purchase receipt email sent successfully')
-      console.log('lelelelelel')
+      
       revalidatePath(`/account/orders/${orderId}`)
       // Check if order is already paid
       // if (order.isPaid) {

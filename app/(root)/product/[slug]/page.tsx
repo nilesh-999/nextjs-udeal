@@ -16,6 +16,9 @@ import BrowsingHistoryList from '@/components/shared/browsing-history-list'
 import AddToBrowsingHistory from '@/components/shared/product/add-to-browsing-history'
 import AddToCart from '@/components/shared/product/add-to-cart'
 import { generateID, round2 } from '@/lib/utils'
+import RatingSummary from '@/components/shared/product/rating-summary'
+import ReviewList from './review-list'
+import { auth } from '@/auth'
 
 export async function generateMetadata(props: {
   params: Promise<{ slug: string }>
@@ -52,9 +55,8 @@ export default async function ProductDetails(props: {
     page: Number(page || '1'),
   })
 
-  
+  const session = await auth()
   return (
-
     <div>
       <AddToBrowsingHistory id={product._id} category={product.category} />
       <section>
@@ -71,9 +73,12 @@ export default async function ProductDetails(props: {
               <h1 className='font-bold text-lg lg:text-xl'>{product.name}</h1>
 
               <div className='flex items-center gap-2'>
-                <span>{product.avgRating.toFixed(1)}</span>
-                <Rating rating={product.avgRating} />
-                <span>{product.numReviews}</span>
+                <RatingSummary
+                  avgRating={product.avgRating}
+                  numReviews={product.numReviews}
+                  asPopover
+                  ratingDistribution={product.ratingDistribution}
+                />
               </div>
               <Separator />
               <div className='flex flex-col gap-3 sm:flex-row sm:items-center'>
@@ -96,9 +101,7 @@ export default async function ProductDetails(props: {
             </div>
             <Separator className='my-2' />
             <div className='flex flex-col gap-2'>
-              <p className='p-bold-20 text-grey-600'>
-                Description:
-              </p>
+              <p className='p-bold-20 text-grey-600'>Description:</p>
               <p className='p-medium-16 lg:p-regular-18'>
                 {product.description}
               </p>
@@ -115,13 +118,9 @@ export default async function ProductDetails(props: {
                   </div>
                 )}
                 {product.countInStock !== 0 ? (
-                  <div className='text-green-700 text-xl'>
-                    In Stock
-                  </div>
+                  <div className='text-green-700 text-xl'>In Stock</div>
                 ) : (
-                  <div className='text-destructive text-xl'>
-                    Out of Stock
-                  </div>
+                  <div className='text-destructive text-xl'>Out of Stock</div>
                 )}
                 {product.countInStock !== 0 && (
                   <div className='flex justify-center items-center'>
@@ -140,21 +139,25 @@ export default async function ProductDetails(props: {
                         color: color || product.colors[0],
                       }}
                     />
-                    </div>
+                  </div>
                 )}
               </CardContent>
             </Card>
-            
           </div>
         </div>
       </section>
       <section className='mt-10'>
-        <ProductSlider products={relatedProducts.data}
-        title={`Best Sellers in ${product.category}`} 
+        <h2 className='hw-bold mb-2' id='reviews'>
+          Customer Reviews
+        </h2>
+        <ReviewList product={product} userId={session?.user?.id } />
+        <ProductSlider
+          products={relatedProducts.data}
+          title={`Best Sellers in ${product.category}`}
         />
       </section>
       <section>
-        <BrowsingHistoryList className='mt-10'/>
+        <BrowsingHistoryList className='mt-10' />
       </section>
     </div>
   )

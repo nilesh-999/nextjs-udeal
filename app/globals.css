@@ -101,3 +101,15 @@ body {
     @apply bg-background text-foreground;
   }
 }
+.search-container {
+  display: flex;
+}
+
+.search-container .select-trigger {
+  border-radius: var(--radius) 0 0 var(--radius) !important;
+}
+
+.search-container .input {
+  border-radius: 0 var(--radius) var(--radius) 0 !important;
+}
+

@@ -7,6 +7,7 @@ import SellButton from './sell-button'
 import './styles.css';
 
 export default function Header() {
+  
   return (
     <nav
       /*style={{ backgroundColor: '#9cacb8' }}*/ className=' sticky top-0 z-50 bg-border backdrop-blur supports-[backdrop-filter]:bg-background/50 border-b   text-black'

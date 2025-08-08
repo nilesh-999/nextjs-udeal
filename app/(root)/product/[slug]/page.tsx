@@ -68,7 +68,7 @@ export default async function ProductDetails(props: {
           <div className='flex w-full flex-col gap-2 md:p-5 col-span-2'>
             <div className='flex flex-col gap-3'>
               <p className='p-medium-16 rounded-full bg-grey-500/10   text-grey-500'>
-                Brand {'Product.Brand'} {product.category}
+                {/* //Brand {'Product.Brand'} {product.category} */}
               </p>
               <h1 className='font-bold text-lg lg:text-xl'>{product.name}</h1>
 

@@ -113,3 +113,16 @@ body {
   border-radius: 0 var(--radius) var(--radius) 0 !important;
 }
 
+.scroll-aware {
+  position: sticky;
+  top: 0;
+  transition: transform 0.3s ease-in-out;
+}
+
+.scroll-aware.hide-on-scroll-down {
+  transform: translateY(-100%);
+}
+
+.scroll-aware.show-on-scroll-up {
+  transform: translateY(0);
+}

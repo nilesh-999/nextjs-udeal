@@ -71,7 +71,7 @@ const products: IProductInput[] = [
     slug: toSlug('Omega Holder'),
     category: 'Academic Tools',
     images: ['/images/logo1.png'],
-    tags: ['new-arrival'],
+    tags: ['todays-deal'],
     isPublished: true,
     price: 100,
     listPrice: 0,

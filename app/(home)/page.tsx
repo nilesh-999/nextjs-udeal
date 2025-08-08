@@ -22,7 +22,7 @@ export default async function Page() {
       },
       items: categories.map((category) => ({
         name: category,
-        image: `/images/${toSlug(category)}.jpg`,
+        image: `/images/${toSlug(category)}.png`,
         href: `/search?category=${category}`,
       })),
     },
@@ -59,13 +59,14 @@ export default async function Page() {
     <>
     <HomeCarousel items={data.carousels}/>
     <div className='md:p-4 md:space-y-4 bg-border'>
-      <HomeCard cards={cards} />
-
       <Card className='w-full rounded-none'>
         <CardContent className='p-4 items-center gap-3'>
          <ProductSlider title={"Today's Deals"} products={todaysDeals} /> 
         </CardContent> 
       </Card>
+      <HomeCard cards={cards} />
+
+      
       <Card className='w-full rounded-none'>
         <CardContent className='p-4 items-center gap-3'>
           <ProductSlider 

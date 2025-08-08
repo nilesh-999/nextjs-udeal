@@ -42,7 +42,7 @@ const products: IProductInput[] = [
   {
     name: 'Rolex Holder',
     slug: toSlug('Rolex Holder'),
-    category: 'Sheet Holder',
+    category: 'Academic Tools',
     images: ['/images/logo.png'],
     tags: ['todays-deal'],
     isPublished: true,
@@ -69,7 +69,7 @@ const products: IProductInput[] = [
   {
     name: 'Omega Drafter',
     slug: toSlug('Omega Holder'),
-    category: 'Drafter',
+    category: 'Academic Tools',
     images: ['/images/logo1.png'],
     tags: ['new-arrival'],
     isPublished: true,
@@ -230,7 +230,7 @@ const data: Data = {
       title: '',
       buttonCaption: 'Shop Now',
       image: '/images/banner2.jpg',
-      url: '/search?category=Sheet Holder',
+      url: '/search?category=Academic tools',
       isPublished: true,
     },
     {

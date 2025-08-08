@@ -10,9 +10,11 @@ import {
 } from '@/components/ui/select'
 
 import { APP_NAME } from '@/lib/constants'
-const categories = ['college stuff', 'random']
+import { getAllCategories } from '@/lib/actions/product.actions'
+
 
 export default async function Search() {
+    const categories = await getAllCategories()
     return (
         <form action='/search' method='GET' className='flex item-stretch h10'>
             <Select name='category'>

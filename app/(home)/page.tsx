@@ -22,7 +22,7 @@ export default async function Page() {
       },
       items: categories.map((category) => ({
         name: category,
-        image: `${process.env.NEXT_PUBLIC_BASE_URL}/images/Academic-Tools.jpg`,
+        image: `/images/Academic-Tools.jpg`,
         href: `/search?category=${category}`,
       })),
     },

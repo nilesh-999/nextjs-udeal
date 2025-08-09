@@ -22,7 +22,7 @@ export default async function Page() {
       },
       items: categories.map((category) => ({
         name: category,
-        image: `/images/${toSlug(category)}.png`,
+        image: `/images/${toSlug(category)}.jpg`,
         href: `/search?category=${category}`,
       })),
     },
